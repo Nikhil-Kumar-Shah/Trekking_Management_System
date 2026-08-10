@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Book Trek - {{ trek.title }}{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - BOOK TREK TEMPLATE
+==========================================================================
+DEVELOPER NOTE:
+Booking confirmation and emergency contact verification form.
+Flask Controller: `user.book_trek` in app/routes/user_routes.py
+
+Key Operations:
+- Summary Card: Reviews trek dates, meeting point, and altitude.
+- Contact & Medical Verification: Pre-fills and confirms blood group, medical conditions,
+  and emergency contact info prior to creating `Booking` record.
+- Form Action: Form POSTs to `user.book_trek` route, creating a booking and decrementing `available_slots`.
+==========================================================================
+-->
+<div class="row mb-4 pb-2 border-bottom">
+    <div class="col-12">
+        <h3><i class="fa-solid fa-receipt me-2"></i>Confirm Trek Booking</h3>
+        <p class="text-muted">Trek: <strong>{{ trek.title }}</strong> | Price: <strong>Free (Academic Demo)</strong></p>
+    </div>
+</div>
+
+<form method="POST" action="" novalidate>
+    {{ form.hidden_tag() }}
+    
+    <div class="row">
+        <!-- Trip Details Panel -->
+        <div class="col-md-5 mb-4 order-md-2">
+            <div class="brutalist-card">
+                <h5 class="border-bottom border-dark pb-2 mb-3">Trek Specifications Summary</h5>
+                <p class="mb-2"><strong>Location:</strong> {{ trek.location }}</p>
+                <p class="mb-2"><strong>Dates:</strong> {{ trek.start_date.strftime('%Y-%m-%d') }} to {{ trek.end_date.strftime('%Y-%m-%d') }}</p>
+                <p class="mb-2"><strong>Altitude:</strong> {{ trek.altitude }} meters</p>
+                <p class="mb-2"><strong>Duration:</strong> {{ trek.duration_days }} days</p>
+                <p class="mb-2"><strong>Meeting point:</strong> {{ trek.meeting_point }}</p>
+                <div class="alert alert-info mt-3 py-2 small border border-2 border-dark rounded-0 bg-light text-dark">
+                    <i class="fa-solid fa-info-circle me-1"></i>Please verify your emergency contact and medical details prior to confirming registration.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Forms Panel -->
+        <div class="col-md-7 mb-4 order-md-1">
+            <h5 class="text-primary border-bottom pb-2 mb-3">Emergency Contact & Medical Details Verification</h5>
+            
+            <!-- Blood Group Field -->
+            <div class="mb-3">
+                {{ form.blood_group.label(class="form-label") }}
+                {% if form.blood_group.errors %}
+                    {{ form.blood_group(class="form-select is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.blood_group.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.blood_group(class="form-select") }}
+                {% endif %}
+            </div>
+            
+            <!-- Medical Conditions Field -->
+            <div class="mb-3">
+                {{ form.medical_conditions.label(class="form-label") }}
+                {% if form.medical_conditions.errors %}
+                    {{ form.medical_conditions(class="form-control is-invalid", rows=2) }}
+                    <div class="invalid-feedback">
+                        {% for error in form.medical_conditions.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.medical_conditions(class="form-control", rows=2) }}
+                {% endif %}
+            </div>
+            
+            <div class="row">
+                <!-- Emergency Contact Name -->
+                <div class="col-md-6 mb-3">
+                    {{ form.emergency_contact_name.label(class="form-label") }}
+                    {% if form.emergency_contact_name.errors %}
+                        {{ form.emergency_contact_name(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.emergency_contact_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.emergency_contact_name(class="form-control") }}
+                    {% endif %}
+                </div>
+                
+                <!-- Emergency Contact Phone -->
+                <div class="col-md-6 mb-3">
+                    {{ form.emergency_contact_phone.label(class="form-label") }}
+                    {% if form.emergency_contact_phone.errors %}
+                        {{ form.emergency_contact_phone(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.emergency_contact_phone.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.emergency_contact_phone(class="form-control") }}
+                    {% endif %}
+                </div>
+            </div>
+            
+            <h5 class="text-primary border-bottom pb-2 mb-3 mt-4">Booking Specific Notes</h5>
+            
+            <!-- Special Requests Field -->
+            <div class="mb-3">
+                {{ form.special_requests.label(class="form-label") }}
+                {% if form.special_requests.errors %}
+                    {{ form.special_requests(class="form-control is-invalid", rows=3, placeholder="Vegetarian food, specific gear rentals, medical carrying needs, etc.") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.special_requests.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.special_requests(class="form-control", rows=3, placeholder="Vegetarian food, specific gear rentals, medical carrying needs, etc.") }}
+                {% endif %}
+            </div>
+            
+            <!-- Confirm Buttons -->
+            <div class="mt-4">
+                {{ form.submit(class="brutalist-btn brutalist-btn-success") }}
+                <a href="{{ url_for('user.trek_detail', trek_id=trek.id) }}" class="brutalist-btn brutalist-btn-secondary ms-2">Cancel</a>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

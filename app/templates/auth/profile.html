@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - PROFILE TEMPLATE
+==========================================================================
+DEVELOPER NOTE:
+This template displays and allows updating current user profile details.
+Flask Controller: `auth.profile` in app/routes/auth_routes.py
+
+Key Elements:
+- Top Actions: Header button provides direct access to `auth.change_password`.
+- Personal & Contact Info: Updates Full Name and Phone. (Email is read-only).
+- Medical & Emergency Details: Updates Blood Group, Medical Conditions, Emergency Contact.
+- Form Action: Form POSTs to `auth.profile` route.
+==========================================================================
+-->
+<div class="brutalist-card">
+    <div class="brutalist-card__header d-flex justify-content-between align-items-center mb-4 pb-2">
+        <span class="brutalist-card__alert"><i class="fa-solid fa-id-card me-2"></i>My Profile Details</span>
+        <a href="{{ url_for('auth.change_password') }}" class="brutalist-btn brutalist-btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px;">
+            <i class="fa-solid fa-key me-1"></i>Change Password
+        </a>
+    </div>
+
+    <form method="POST" action="" novalidate>
+        {{ form.hidden_tag() }}
+        
+        <div class="row">
+            <!-- Full Name Field -->
+            <div class="col-md-6 mb-3">
+                {{ form.full_name.label(class="form-label font-weight-bold text-uppercase small") }}
+                {% if form.full_name.errors %}
+                    {{ form.full_name(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.full_name.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.full_name(class="form-control") }}
+                {% endif %}
+            </div>
+            
+            <!-- Phone Field -->
+            <div class="col-md-6 mb-3">
+                {{ form.phone.label(class="form-label font-weight-bold text-uppercase small") }}
+                {% if form.phone.errors %}
+                    {{ form.phone(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.phone.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.phone(class="form-control") }}
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Readonly Email Address Display -->
+        <div class="mb-3">
+            <label class="form-label font-weight-bold text-uppercase small">Email Address</label>
+            <input type="text" class="form-control" value="{{ current_user.email }}" readonly disabled>
+            <small class="form-text text-muted">Email address cannot be changed after registration.</small>
+        </div>
+
+        <h5 class="text-dark border-bottom border-2 border-dark pb-2 mb-3 mt-4">
+            <i class="fa-solid fa-briefcase-medical me-2"></i>Emergency & Medical Information
+        </h5>
+        
+        <div class="row">
+            <!-- Blood Group Field -->
+            <div class="col-md-6 mb-3">
+                {{ form.blood_group.label(class="form-label font-weight-bold text-uppercase small") }}
+                {% if form.blood_group.errors %}
+                    {{ form.blood_group(class="form-select is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.blood_group.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.blood_group(class="form-select") }}
+                {% endif %}
+            </div>
+            
+            <!-- Medical Conditions Field -->
+            <div class="col-md-6 mb-3">
+                {{ form.medical_conditions.label(class="form-label font-weight-bold text-uppercase small") }}
+                {% if form.medical_conditions.errors %}
+                    {{ form.medical_conditions(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.medical_conditions.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.medical_conditions(class="form-control", rows=2) }}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Emergency Contact Name Field -->
+            <div class="col-md-6 mb-3">
+                {{ form.emergency_contact_name.label(class="form-label font-weight-bold text-uppercase small") }}
+                {% if form.emergency_contact_name.errors %}
+                    {{ form.emergency_contact_name(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.emergency_contact_name.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.emergency_contact_name(class="form-control") }}
+                {% endif %}
+            </div>
+            
+            <!-- Emergency Contact Phone Field -->
+            <div class="col-md-6 mb-3">
+                {{ form.emergency_contact_phone.label(class="form-label font-weight-bold text-uppercase small") }}
+                {% if form.emergency_contact_phone.errors %}
+                    {{ form.emergency_contact_phone(class="form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.emergency_contact_phone.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.emergency_contact_phone(class="form-control") }}
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="mt-4">
+            <button type="submit" class="brutalist-btn brutalist-btn-primary w-100">
+                Update Profile Details
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

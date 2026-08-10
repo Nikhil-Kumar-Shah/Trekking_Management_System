@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Create Staff - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - CREATE STAFF TEMPLATE
+==========================================================================
+DEVELOPER NOTE:
+Form template for registering new staff credentials.
+Flask Controller: `admin.create_staff` in app/routes/admin_routes.py
+
+Form Fields:
+- Full Name, Email, Phone, Password.
+- Creates user account with `role='staff'`.
+==========================================================================
+-->
+<div class="row mt-4">
+    <div class="col-md-8 mx-auto">
+        <div class="brutalist-card">
+            <div class="brutalist-card__header mb-4">
+                <span class="brutalist-card__alert"><i class="fa-solid fa-user-plus me-2"></i>Create Staff Account</span>
+            </div>
+            
+            <form method="POST" action="" novalidate>
+                {{ form.hidden_tag() }}
+                
+                <!-- Full Name Field -->
+                <div class="mb-3">
+                    {{ form.full_name.label(class="form-label font-weight-bold text-uppercase small") }}
+                    {% if form.full_name.errors %}
+                        {{ form.full_name(class="form-control is-invalid", placeholder="Full Name") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.full_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.full_name(class="form-control", placeholder="Full Name") }}
+                    {% endif %}
+                </div>
+                
+                <!-- Email Field -->
+                <div class="mb-3">
+                    {{ form.email.label(class="form-label font-weight-bold text-uppercase small") }}
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control is-invalid", placeholder="staff@trekking.com") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control", placeholder="staff@trekking.com") }}
+                    {% endif %}
+                </div>
+                
+                <!-- Phone Field -->
+                <div class="mb-3">
+                    {{ form.phone.label(class="form-label font-weight-bold text-uppercase small") }}
+                    {% if form.phone.errors %}
+                        {{ form.phone(class="form-control is-invalid", placeholder="Phone Number") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.phone.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.phone(class="form-control", placeholder="Phone Number") }}
+                    {% endif %}
+                </div>
+                
+                <!-- Password Field -->
+                <div class="mb-3">
+                    {{ form.password.label(class="form-label font-weight-bold text-uppercase small") }}
+                    {% if form.password.errors %}
+                        {{ form.password(class="form-control is-invalid", placeholder="Password") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.password(class="form-control", placeholder="Password") }}
+                    {% endif %}
+                </div>
+                
+                <!-- Form Submit Actions -->
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="brutalist-btn brutalist-btn-primary flex-fill">Create Staff Account</button>
+                    <a href="{{ url_for('admin.list_staff') }}" class="brutalist-btn brutalist-btn-secondary flex-fill text-center">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

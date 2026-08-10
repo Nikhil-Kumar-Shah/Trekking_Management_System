@@ -1,0 +1,79 @@
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - SIDEBAR PARTIAL
+==========================================================================
+DEVELOPER NOTE:
+This partial defines the left vertical navigation menu included in base.html.
+
+Role Separation Logic:
+- Admin Role (`current_user.role == 'admin'`): Shows Admin Dashboard, Trek Management,
+  Staff Management, User Management, Bookings, and Reports.
+- Staff Role (`current_user.role == 'staff'`): Shows Staff Dashboard and Assigned Treks.
+- Trekker / User Role: Shows User Dashboard, Browse Treks, Bookings, History, Certificates, Notifications.
+- Shared Profile Link: Available to all authenticated users at the bottom of the sidebar.
+==========================================================================
+-->
+<div class="sidebar">
+    <h5 class="mb-3 text-secondary pb-2 border-bottom">
+        <i class="fa-solid fa-compass me-2"></i>Navigation Menu
+    </h5>
+    
+    <div class="list-group list-group-flush">
+        {% if current_user.role == 'admin' %}
+            <!-- Admin Navigation Options -->
+            <a href="{{ url_for('admin.dashboard') }}" class="list-group-item list-group-item-action py-2.5">
+                <i class="fa-solid fa-chart-line me-2"></i>Admin Dashboard
+            </a>
+            <a href="{{ url_for('admin.list_treks') }}" class="list-group-item list-group-item-action py-2.5">
+                <i class="fa-solid fa-mountain me-2"></i>Manage Treks
+            </a>
+            <a href="{{ url_for('admin.list_staff') }}" class="list-group-item list-group-item-action py-2.5">
+                <i class="fa-solid fa-user-shield me-2"></i>Manage Staff
+            </a>
+            <a href="{{ url_for('admin.list_users') }}" class="list-group-item list-group-item-action py-2.5">
+                <i class="fa-solid fa-users me-2"></i>Manage Trekkers
+            </a>
+            <a href="{{ url_for('admin.list_bookings') }}" class="list-group-item list-group-item-action py-2.5">
+                <i class="fa-solid fa-receipt me-2"></i>All Bookings
+            </a>
+            <a href="{{ url_for('admin.view_reports') }}" class="list-group-item list-group-item-action py-2.5">
+                <i class="fa-solid fa-file-invoice me-2"></i>Reports & Logs
+            </a>
+            
+        {% elif current_user.role == 'staff' %}
+            <!-- Staff Navigation Options -->
+            <a href="{{ url_for('staff.dashboard') }}" class="list-group-item list-group-item-action py-2.5">
+                <i class="fa-solid fa-chart-simple me-2"></i>Staff Dashboard
+            </a>
+            <a href="{{ url_for('staff.list_treks') }}" class="list-group-item list-group-item-action py-2.5">
+                <i class="fa-solid fa-person-walking-luggage me-2"></i>Assigned Treks
+            </a>
+            
+        {% else %}
+            <!-- Trekker / User Navigation Options -->
+            <a href="{{ url_for('user.dashboard') }}" class="list-group-item list-group-item-action py-2.5">
+                <i class="fa-solid fa-gauge me-2"></i>My Dashboard
+            </a>
+            <a href="{{ url_for('user.list_treks') }}" class="list-group-item list-group-item-action py-2.5">
+                <i class="fa-solid fa-magnifying-glass me-2"></i>Browse Treks
+            </a>
+            <a href="{{ url_for('user.my_bookings') }}" class="list-group-item list-group-item-action py-2.5">
+                <i class="fa-solid fa-ticket me-2"></i>My Bookings
+            </a>
+            <a href="{{ url_for('user.my_history') }}" class="list-group-item list-group-item-action py-2.5">
+                <i class="fa-solid fa-clock-rotate-left me-2"></i>Trek History
+            </a>
+            <a href="{{ url_for('user.my_certificates') }}" class="list-group-item list-group-item-action py-2.5">
+                <i class="fa-solid fa-award me-2"></i>My Certificates
+            </a>
+            <a href="{{ url_for('user.list_notifications') }}" class="list-group-item list-group-item-action py-2.5">
+                <i class="fa-solid fa-bell me-2"></i>Notifications
+            </a>
+        {% endif %}
+        
+        <!-- Shared Edit Profile Option -->
+        <a href="{{ url_for('auth.profile') }}" class="list-group-item list-group-item-action py-2.5 mt-3 border-top text-primary">
+            <i class="fa-solid fa-id-card me-2"></i>Edit Profile
+        </a>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}System Error - 500{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - 500 INTERNAL SERVER ERROR
+==========================================================================
+DEVELOPER NOTE:
+Rendered when an unhandled server exception or error occurs during request processing.
+==========================================================================
+-->
+<div class="text-center py-5">
+    <i class="fa-solid fa-triangle-exclamation fa-4x text-danger mb-4"></i>
+    <h1 class="display-5 text-dark font-weight-bold">500 - System Error</h1>
+    <p class="lead text-secondary my-3">An unexpected server error occurred. The technical logs have recorded this event.</p>
+    <div class="mt-4">
+        {% if current_user.is_authenticated %}
+            {% if current_user.role == 'admin' %}
+                <a href="{{ url_for('admin.dashboard') }}" class="btn btn-primary">Go to Admin Dashboard</a>
+            {% elif current_user.role == 'staff' %}
+                <a href="{{ url_for('staff.dashboard') }}" class="btn btn-primary">Go to Staff Dashboard</a>
+            {% else %}
+                <a href="{{ url_for('user.dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+            {% endif %}
+        {% else %}
+            <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Go to Log In</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

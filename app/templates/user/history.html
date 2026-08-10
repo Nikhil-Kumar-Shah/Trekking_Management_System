@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Trek History - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - TREK HISTORY TEMPLATE
+==========================================================================
+DEVELOPER NOTE:
+Displays historical table of completed treks, cancelled bookings, and earned certificates.
+Flask Controller: `user.my_history` in app/routes/user_routes.py
+
+Key Operations:
+- Certificate Access: If trek status is 'Completed' and user was checked in, provides direct link
+  to `user.view_certificate` route.
+==========================================================================
+-->
+<div class="mb-4 pb-2 border-bottom">
+    <h3><i class="fa-solid fa-clock-rotate-left me-2"></i>My Trekking History</h3>
+    <p class="text-muted">Review your past completed trekking expeditions or cancelled registrations.</p>
+</div>
+
+{% if bookings %}
+    <div class="table-responsive">
+        <table class="table table-hover table-striped align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Trek Title</th>
+                    <th>Dates</th>
+                    <th>Location</th>
+                    <th>Booking Status</th>
+                    <th>Trek Status</th>
+                    <th>Attendance</th>
+                    <th>Certificate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                    <tr>
+                        <td class="font-weight-bold">{{ booking.trek.title }}</td>
+                        <td>
+                            <small class="d-block">{{ booking.trek.start_date.strftime('%Y-%m-%d') }}</small>
+                            <small class="d-block text-secondary">to {{ booking.trek.end_date.strftime('%Y-%m-%d') }}</small>
+                        </td>
+                        <td>{{ booking.trek.location }}</td>
+                        <td>
+                            {% if booking.booking_status == 'Booked' %}
+                                <span class="badge bg-success">Booked</span>
+                            {% else %}
+                                <span class="badge bg-danger">Cancelled</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if booking.trek.trek_status == 'Completed' %}
+                                <span class="badge bg-primary">Completed</span>
+                            {% elif booking.trek.trek_status == 'Cancelled' %}
+                                <span class="badge bg-danger">Cancelled</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ booking.trek.trek_status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if booking.booking_status == 'Cancelled' %}
+                                <span class="text-muted">-</span>
+                            {% else %}
+                                {% if booking.checked_in %}
+                                    <span class="text-success font-weight-bold"><i class="fa-solid fa-check-circle"></i> Attended</span>
+                                {% else %}
+                                    <span class="text-danger"><i class="fa-solid fa-times-circle"></i> Missed</span>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if booking.booking_status == 'Booked' and booking.trek.trek_status == 'Completed' and booking.certificates %}
+                                <a href="{{ url_for('user.view_certificate', certificate_number=booking.certificates[0].certificate_number) }}" class="brutalist-btn brutalist-btn-primary d-inline-block text-center" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px;">
+                                    <i class="fa-solid fa-award me-1"></i>View Certificate
+                                </a>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="p-5 text-center text-muted border rounded bg-white shadow-sm">
+        <i class="fa-solid fa-history fa-3x mb-3 text-secondary"></i>
+        <h5>No Historical Records</h5>
+        <p>You have no past completed treks or cancelled registrations logged in your history.</p>
+    </div>
+{% endif %}
+{% endblock %}

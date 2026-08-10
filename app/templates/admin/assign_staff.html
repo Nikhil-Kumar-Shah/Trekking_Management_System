@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Assign Staff - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - ASSIGN STAFF TEMPLATE
+==========================================================================
+DEVELOPER NOTE:
+Template for assigning a staff member to lead or guide a specific trek event.
+Flask Controller: `admin.assign_staff` in app/routes/admin_routes.py
+
+Key Elements:
+- Staff Context: Target staff member passed via `staff` object.
+- Assignment Form: Select trek event and specify assigned role (e.g. Lead Guide, Medical Assistant).
+- Active Assignments List: Displays currently assigned treks with a delete/remove form action (`admin.remove_assignment`).
+==========================================================================
+-->
+<div class="row mb-4 pb-2 border-bottom">
+    <div class="col-12">
+        <h3><i class="fa-solid fa-link me-2"></i>Assign Staff to Trekking Event</h3>
+        <p class="text-muted">Assigning: <strong>{{ staff.full_name }}</strong></p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Assignment Form -->
+    <div class="col-md-6 mb-4">
+        <div class="brutalist-card">
+            <h5 class="border-bottom border-dark pb-2 mb-3">New Assignment Form</h5>
+            <form method="POST" action="" novalidate>
+                {{ form.hidden_tag() }}
+                
+                <div class="mb-3 d-none">
+                    {{ form.staff_id.label(class="form-label") }}
+                    {{ form.staff_id(class="form-control") }}
+                </div>
+                
+                <!-- Trek Dropdown Selector -->
+                <div class="mb-3">
+                    <label class="form-label" for="trek_id">Select Trek</label>
+                    <select class="form-select" name="trek_id" id="trek_id" required>
+                        {% for trek in treks %}
+                            <option value="{{ trek.id }}">{{ trek.title }} ({{ trek.location }} - {{ trek.trek_status }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- Role Selector -->
+                <div class="mb-3">
+                    {{ form.assigned_role.label(class="form-label") }}
+                    {% if form.assigned_role.errors %}
+                        {{ form.assigned_role(class="form-select is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.assigned_role.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.assigned_role(class="form-select") }}
+                    {% endif %}
+                </div>
+                
+                <div class="mt-4">
+                    {{ form.submit(class="brutalist-btn brutalist-btn-primary") }}
+                    <a href="{{ url_for('admin.list_staff') }}" class="brutalist-btn brutalist-btn-secondary ms-2">Back to Staff</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Active Assignments -->
+    <div class="col-md-6 mb-4">
+        <div class="brutalist-card brutalist-card--beige">
+            <h5 class="border-bottom border-dark pb-2 mb-3">Active Assignments</h5>
+            {% if assignments %}
+                <ul class="list-group list-group-flush">
+                    {% for assign in assignments %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0">{{ assign.trek.title }}</h6>
+                                <small class="text-muted">Role: {{ assign.assigned_role }}</small>
+                            </div>
+                            <form action="{{ url_for('admin.remove_assignment', assignment_id=assign.id) }}" method="POST">
+                                <button type="submit" class="brutalist-btn brutalist-btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px;">
+                                    <i class="fa-solid fa-trash"></i> Remove
+                                </button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="text-center py-4 text-muted">
+                    No active assignments for this staff member.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

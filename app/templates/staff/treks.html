@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}My Assigned Treks - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - STAFF ASSIGNED TREKS
+==========================================================================
+DEVELOPER NOTE:
+Lists all trek events assigned to the currently logged-in staff guide.
+Flask Controller: `staff.list_treks` in app/routes/staff_routes.py
+
+Key Operations:
+- View Attendance: Links to `staff.list_participants` for marking attendance.
+- Status Update: Links to `staff.update_status` for transitioning trek state.
+- Slot Adjustments: Links to `staff.update_slots` for logistics adjustments.
+==========================================================================
+-->
+<div class="mb-4 pb-2 border-bottom">
+    <h3><i class="fa-solid fa-mountain me-2"></i>My Assigned Trekking Campaigns</h3>
+    <p class="text-muted">Below is the complete registry of upcoming and past trekking operations assigned to your coordination detail.</p>
+</div>
+
+{% if treks %}
+    <div class="row">
+        {% for trek in treks %}
+            {% set colors = ['yellow', 'blue', 'coral'] %}
+            {% set color = colors[loop.index0 % 3] %}
+            <div class="col-md-6 mb-4">
+                <div class="brutalist-card brutalist-card--{{ color }} h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="brutalist-card__header border-dark d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="text-uppercase font-weight-bold mb-0">{{ trek.title }}</h5>
+                            {% if trek.trek_status == 'Open' %}
+                                <span class="badge bg-success">Open</span>
+                            {% elif trek.trek_status == 'Closed' %}
+                                <span class="badge bg-secondary">Closed</span>
+                            {% elif trek.trek_status == 'In Progress' %}
+                                <span class="badge bg-info text-dark">In Progress</span>
+                            {% elif trek.trek_status == 'Completed' %}
+                                <span class="badge bg-primary">Completed</span>
+                            {% else %}
+                                <span class="badge bg-danger">Cancelled</span>
+                            {% endif %}
+                        </div>
+                        <p class="mb-1"><strong>Location:</strong> {{ trek.location }} ({{ trek.altitude }}m)</p>
+                        <p class="mb-1"><strong>Dates:</strong> {{ trek.start_date.strftime('%Y-%m-%d') }} to {{ trek.end_date.strftime('%Y-%m-%d') }}</p>
+                        <p class="mb-3"><strong>Booked Slots:</strong> {{ trek.max_slots - trek.available_slots }} / {{ trek.max_slots }}</p>
+                    </div>
+                    <div class="d-flex flex-column gap-2 mt-3 pt-3 border-top border-2 border-dark">
+                        <a href="{{ url_for('staff.list_participants', trek_id=trek.id) }}" class="brutalist-btn brutalist-btn-primary w-100 text-center" style="padding: 0.4rem; font-size: 0.85rem; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px; margin: 0;">
+                            <i class="fa-solid fa-users me-1"></i>View Attendance
+                        </a>
+                        <div class="d-flex gap-2">
+                            <a href="{{ url_for('staff.update_status', trek_id=trek.id) }}" class="brutalist-btn flex-fill text-center" style="background-color: var(--ui-card-bg) !important; color: var(--ui-text) !important; padding: 0.4rem; font-size: 0.85rem; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px; margin: 0;">
+                                <i class="fa-solid fa-edit me-1"></i>Status
+                            </a>
+                            <a href="{{ url_for('staff.update_slots', trek_id=trek.id) }}" class="brutalist-btn flex-fill text-center" style="background-color: var(--ui-card-bg) !important; color: var(--ui-text) !important; padding: 0.4rem; font-size: 0.85rem; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px; margin: 0;">
+                                <i class="fa-solid fa-sliders me-1"></i>Slots
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="p-5 text-center text-muted border rounded bg-white shadow-sm">
+        <i class="fa-solid fa-mountain-sun fa-3x mb-3 text-secondary"></i>
+        <h5>No Assigned Trekking Campaigns</h5>
+        <p>No treks have been scheduled to your crew detail yet.</p>
+    </div>
+{% endif %}
+{% endblock %}

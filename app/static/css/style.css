@@ -1,0 +1,38 @@
+/* ==========================================================================
+   Trek Operations Management System (TOMS) - MASTER STYLESHEET
+   ==========================================================================
+   DEVELOPER MAP & STYLESHEET INDEX:
+   
+   To maintain clean architecture and easy navigation, TOMS stylesheet logic 
+   is organized into 3 modular stylesheets imported below:
+
+   1. base.css (app/static/css/base.css)
+      - Theme Variables & Colors (:root)
+      - Font Definitions (Space Grotesk & Space Mono)
+      - Global Resets & Heading Typography (h1-h6)
+
+   2. components.css (app/static/css/components.css)
+      - Brutalist Cards & Color Variants (.brutalist-card, --yellow, --blue, etc.)
+      - Brutalist Buttons (.brutalist-btn, -primary, -success, -danger)
+      - Form Inputs & Select Controls (.form-control, .form-select)
+      - Bauhaus Design Containers & Radio Selection Shapes
+      - Navigation Header (.navbar) & Left Menu Sidebar (.sidebar)
+      - Tables (.table), Badges (.badge), Metric Counters (.metric-box)
+      - Footer (footer)
+
+   3. pages.css (app/static/css/pages.css)
+      - Main Layout & Spacing Overrides (.main-container, .content-card)
+      - Landing Page Role Switcher CSS Toggles
+      - Printable Certificate Styles (@media print)
+      - Mobile Responsive Media Queries (@media max-width: 767.98px)
+
+   HOW TO MODIFY STYLES:
+   - To change application colors or fonts -> Edit base.css
+   - To change buttons, cards, forms, or tables -> Edit components.css
+   - To change mobile layout or printable certificate -> Edit pages.css
+   ========================================================================== */
+
+/* Import Modular Stylesheets */
+@import url('base.css');
+@import url('components.css');
+@import url('pages.css');

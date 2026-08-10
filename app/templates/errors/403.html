@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Access Forbidden - 403{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - 403 FORBIDDEN ERROR
+==========================================================================
+DEVELOPER NOTE:
+Rendered when an authenticated user attempts to access a route restricted to another role
+(e.g., a trekker user attempting to access `/admin/dashboard`).
+==========================================================================
+-->
+<div class="text-center py-5">
+    <i class="fa-solid fa-ban fa-4x text-danger mb-4"></i>
+    <h1 class="display-5 text-dark font-weight-bold">403 - Forbidden</h1>
+    <p class="lead text-secondary my-3">Access Denied. You do not have permissions to access this page.</p>
+    <div class="mt-4">
+        {% if current_user.is_authenticated %}
+            {% if current_user.role == 'admin' %}
+                <a href="{{ url_for('admin.dashboard') }}" class="btn btn-primary">Go to Admin Dashboard</a>
+            {% elif current_user.role == 'staff' %}
+                <a href="{{ url_for('staff.dashboard') }}" class="btn btn-primary">Go to Staff Dashboard</a>
+            {% else %}
+                <a href="{{ url_for('user.dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+            {% endif %}
+        {% else %}
+            <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Go to Log In</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

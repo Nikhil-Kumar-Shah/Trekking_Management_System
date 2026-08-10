@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}My Bookings - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - MY BOOKINGS TEMPLATE
+==========================================================================
+DEVELOPER NOTE:
+Lists active upcoming trek registrations for the current user.
+Flask Controller: `user.my_bookings` in app/routes/user_routes.py
+
+Key Operations:
+- View Details: Link to `user.trek_detail` route.
+- Cancellation: Form POST to `user.cancel_booking` route if trek is not yet in progress or completed.
+==========================================================================
+-->
+<div class="mb-4 pb-2 border-bottom">
+    <h3><i class="fa-solid fa-ticket me-2"></i>My Bookings</h3>
+    <p class="text-muted">Review your confirmed upcoming treks. You can cancel registrations here prior to the start date.</p>
+</div>
+
+{% if bookings %}
+    <div class="row">
+        {% for booking in bookings %}
+            <div class="col-12 mb-4">
+                <div class="brutalist-card">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <h4 class="mb-0 text-dark font-weight-bold">{{ booking.trek.title }}</h4>
+                                <span class="badge bg-success border-dark text-white">Confirmed</span>
+                            </div>
+                            <p class="mb-1 text-secondary"><i class="fa-solid fa-map-location-dot me-2"></i>Location: {{ booking.trek.location }}</p>
+                            <p class="mb-1 text-secondary"><i class="fa-solid fa-calendar-days me-2"></i>Dates: {{ booking.trek.start_date.strftime('%Y-%m-%d') }} to {{ booking.trek.end_date.strftime('%Y-%m-%d') }}</p>
+                            <p class="mb-1 text-secondary"><i class="fa-solid fa-map-pin me-2"></i>Meeting Point: {{ booking.trek.meeting_point }}</p>
+                            {% if booking.special_requests %}
+                                <p class="mb-0 mt-3 small text-muted border-top pt-2"><strong>Special Requests:</strong> {{ booking.special_requests }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <div class="d-flex flex-column gap-2 align-items-md-end">
+                                <a href="{{ url_for('user.trek_detail', trek_id=booking.trek_id) }}" class="brutalist-btn w-100 text-center" style="max-width: 250px; padding: 0.5rem; font-size: 0.85rem; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px; background-color: #ffffff; color: var(--ui-text); margin: 0;">
+                                    <i class="fa-solid fa-info-circle me-1"></i>View Details
+                                </a>
+                                {% if booking.trek.trek_status not in ['In Progress', 'Completed', 'Cancelled'] %}
+                                <form action="{{ url_for('user.cancel_booking', booking_id=booking.id) }}" method="POST" class="w-100 d-flex justify-content-md-end">
+                                    <button type="submit" class="brutalist-btn brutalist-btn-danger w-100 text-center" style="max-width: 250px; padding: 0.5rem; font-size: 0.85rem; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px; margin: 0;">
+                                        <i class="fa-solid fa-trash me-1"></i>Cancel Booking
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="p-5 text-center text-muted border border-4 border-dark bg-white" style="box-shadow: var(--brutalist-shadow-offset) var(--brutalist-shadow-offset) 0 var(--ui-border);">
+        <i class="fa-solid fa-ticket-alt fa-3x mb-3 text-secondary"></i>
+        <h5>No Active Bookings</h5>
+        <p>You have no active bookings at the moment.</p>
+        <a href="{{ url_for('user.list_treks') }}" class="brutalist-btn brutalist-btn-primary mt-2">
+            <i class="fa-solid fa-compass me-1"></i>Browse Open Treks
+        </a>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Update Trek Status - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - STAFF UPDATE STATUS
+==========================================================================
+DEVELOPER NOTE:
+Allows assigned staff to update trek state (Open, Closed, In Progress, Completed, Cancelled).
+Flask Controller: `staff.update_status` in app/routes/staff_routes.py
+
+Key Logic:
+- Transition Audit: Requires specifying an operational reason, logged to `TrekStatusLog`.
+- Certificate Generation: When status changes to `Completed`, certificates are automatically
+  issued to all present/checked-in participants.
+==========================================================================
+-->
+<div class="row mb-4 pb-2 border-bottom">
+    <div class="col-12">
+        <h3><i class="fa-solid fa-edit me-2"></i>Update Trek Status</h3>
+        <p class="text-muted">Trek: <strong>{{ trek.title }}</strong> | Current Status: <span class="badge bg-secondary">{{ trek.trek_status }}</span></p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Operations guidelines -->
+    <div class="col-md-6 mb-4">
+        <div class="brutalist-card brutalist-card--beige h-100">
+            <h5 class="border-bottom border-dark pb-2 mb-3">Status Guidelines</h5>
+            <ul>
+                <li class="mb-2"><strong>Open:</strong> Trek is active and accepting trekker bookings.</li>
+                <li class="mb-2"><strong>Closed:</strong> Bookings are locked, but trek has not yet started.</li>
+                <li class="mb-2"><strong>In Progress:</strong> Trek expedition is underway on the field.</li>
+                <li class="mb-2"><strong>Completed:</strong> Trek has finished. Certificates will automatically generate for present participants.</li>
+                <li class="mb-2"><strong>Cancelled:</strong> Trek is cancelled due to weather or safety concerns.</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Status update form -->
+    <div class="col-md-6 mb-4">
+        <div class="brutalist-card h-100">
+            <h5 class="border-bottom border-dark pb-2 mb-3">Status Form</h5>
+            <form method="POST" action="" novalidate>
+                {{ form.hidden_tag() }}
+                
+                <!-- Status Field -->
+                <div class="mb-3">
+                    {{ form.trek_status.label(class="form-label") }}
+                    {% if form.trek_status.errors %}
+                        {{ form.trek_status(class="form-select is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.trek_status.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.trek_status(class="form-select") }}
+                    {% endif %}
+                </div>
+                
+                <!-- Reason Field -->
+                <div class="mb-3">
+                    {{ form.reason.label(class="form-label") }}
+                    {% if form.reason.errors %}
+                        {{ form.reason(class="form-control is-invalid", rows=3, placeholder="Describe the operational reason for this status change.") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.reason.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.reason(class="form-control", rows=3, placeholder="Describe the operational reason for this status change.") }}
+                    {% endif %}
+                </div>
+                
+                <div class="mt-4">
+                    {{ form.submit(class="brutalist-btn brutalist-btn-primary") }}
+                    <a href="{{ url_for('staff.list_treks') }}" class="brutalist-btn brutalist-btn-secondary ms-2">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

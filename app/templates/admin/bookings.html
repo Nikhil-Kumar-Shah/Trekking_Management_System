@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}All Bookings - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - ADMIN BOOKINGS MANAGEMENT
+==========================================================================
+DEVELOPER NOTE:
+Displays master audit log of all trekker registrations and payment statuses.
+Flask Controller: `admin.list_bookings` in app/routes/admin_routes.py
+
+Key Operations:
+- Payment Toggle: Admin can switch payment status between Paid / Pending via `admin.toggle_payment` route.
+- Attendance & Status: Displays booking status (Booked / Cancelled) and check-in attendance state.
+==========================================================================
+-->
+<div class="mb-4 pb-2 border-bottom border-dark">
+    <h3><i class="fa-solid fa-receipt me-2"></i>All Bookings</h3>
+</div>
+
+{% if bookings %}
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Trekker</th>
+                    <th>Trek Event</th>
+                    <th>Booking Date</th>
+                    <th>Payment</th>
+                    <th>Status</th>
+                    <th>Checked In</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                    <tr>
+                        <td>#{{ booking.id }}</td>
+                        <td>
+                            <strong class="d-block">{{ booking.trekker.full_name }}</strong>
+                            <small class="text-secondary">{{ booking.trekker.email }}</small>
+                        </td>
+                        <td>
+                            <span class="d-block">{{ booking.trek.title }}</span>
+                            <small class="text-muted">Start: {{ booking.trek.start_date.strftime('%Y-%m-%d') }}</small>
+                        </td>
+                        <td>{{ booking.booking_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            {% if booking.payment_status == 'Paid' %}
+                                <span class="badge bg-success">Paid</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if booking.booking_status == 'Booked' %}
+                                <span class="badge bg-success">Booked</span>
+                            {% else %}
+                                <span class="badge bg-danger">Cancelled</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if booking.checked_in %}
+                                <span class="text-success font-weight-bold"><i class="fa-solid fa-square-check fa-lg"></i> Present</span>
+                            {% else %}
+                                <span class="text-muted"><i class="fa-solid fa-square fa-lg"></i> Absent</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if booking.booking_status == 'Booked' %}
+                                <form action="{{ url_for('admin.toggle_payment', booking_id=booking.id) }}" method="POST" style="display:inline;">
+                                    <button type="submit" class="brutalist-btn" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px;">
+                                        Toggle Payment
+                                    </button>
+                                </form>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="p-5 text-center text-muted border rounded bg-light">
+        <i class="fa-solid fa-ticket fa-3x mb-3 text-secondary"></i>
+        <h5>No Booking Logs Found</h5>
+        <p>No trek registrations have been logged by trekkers yet.</p>
+    </div>
+{% endif %}
+{% endblock %}

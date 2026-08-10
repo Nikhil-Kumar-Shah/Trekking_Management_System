@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}{{ trek.title }} - Trekking Details{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - TREK DETAIL TEMPLATE
+==========================================================================
+DEVELOPER NOTE:
+Displays full expedition overview, assigned crew details, and booking CTA.
+Flask Controller: `user.trek_detail` in app/routes/user_routes.py
+
+Key Elements:
+- Trek Description & Logistics: Pre-line text layout with altitude, duration, start/end dates.
+- Assigned Staff List: Displays crew members assigned to this trek (`assignments`).
+- Booking Button: Directs to `user.book_trek` if open and slots available.
+==========================================================================
+-->
+<div class="mb-4 pb-2 border-bottom border-dark">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h3>{{ trek.title }}</h3>
+        <a href="{{ url_for('user.list_treks') }}" class="brutalist-btn" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px; background-color: #ffffff;">
+            <i class="fa-solid fa-arrow-left me-1"></i>Back to Browse
+        </a>
+    </div>
+    <h5 class="text-secondary"><i class="fa-solid fa-map-location-dot me-2"></i>{{ trek.location }}</h5>
+</div>
+
+<div class="row">
+    <!-- Main Description & Guides -->
+    <div class="col-md-8 mb-4">
+        <div class="mb-4">
+            <h5 class="border-bottom pb-2 mb-3 text-primary"><i class="fa-solid fa-file-text me-2"></i>About the Expedition</h5>
+            <p style="white-space: pre-line; line-height: 1.6;">{{ trek.description }}</p>
+        </div>
+        
+        <!-- Assigned Staff members -->
+        <div class="mb-4">
+            <h5 class="border-bottom pb-2 mb-3 text-primary"><i class="fa-solid fa-user-shield me-2"></i>Assigned Field Operations Staff</h5>
+            {% if assignments %}
+                <div class="row">
+                    {% for assign in assignments %}
+                        <div class="col-md-6 mb-3">
+                            <div class="border border-3 border-dark p-3 bg-white" style="box-shadow: 3px 3px 0 var(--ui-border);">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <strong>{{ assign.staff.full_name }}</strong>
+                                    <span class="badge bg-secondary">{{ assign.assigned_role }}</span>
+                                </div>
+                                <small class="d-block text-secondary mt-2"><i class="fa-solid fa-phone me-1"></i>{{ assign.staff.phone }}</small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted small">Field crew details will be listed closer to departure.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Quick Specs & Action -->
+    <div class="col-md-4 mb-4">
+        <div class="brutalist-card">
+            <h5 class="border-bottom border-dark pb-2 mb-3 text-dark">Trip Specifications</h5>
+            <ul class="list-unstyled">
+                <li class="mb-3">
+                    <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem;">Altitude</small>
+                    <strong>{{ trek.altitude }} meters</strong>
+                </li>
+                <li class="mb-3">
+                    <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem;">Difficulty</small>
+                    <span class="badge bg-dark">{{ trek.difficulty_level }}</span>
+                </li>
+                <li class="mb-3">
+                    <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem;">Duration</small>
+                    <strong>{{ trek.duration_days }} days</strong>
+                </li>
+                <li class="mb-3">
+                    <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem;">Departure Date</small>
+                    <strong>{{ trek.start_date.strftime('%Y-%m-%d') }}</strong>
+                </li>
+                <li class="mb-3">
+                    <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem;">Return Date</small>
+                    <strong>{{ trek.end_date.strftime('%Y-%m-%d') }}</strong>
+                </li>
+                <li class="mb-3">
+                    <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem;">Gathering Point</small>
+                    <strong>{{ trek.meeting_point }}</strong>
+                </li>
+                <li class="mb-3">
+                    <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem;">Available Spots</small>
+                    <strong>{{ trek.available_slots }} / {{ trek.max_slots }} left</strong>
+                </li>
+            </ul>
+            
+            <div class="d-grid gap-2 mt-4 pt-3 border-top border-dark">
+                {% if already_booked %}
+                    <a href="{{ url_for('user.my_bookings') }}" class="brutalist-btn brutalist-btn-success text-center">
+                        <i class="fa-solid fa-ticket me-1"></i>You Have Booked This
+                    </a>
+                {% else %}
+                    {% if trek.trek_status == 'Open' and trek.available_slots > 0 %}
+                        <a href="{{ url_for('user.book_trek', trek_id=trek.id) }}" class="brutalist-btn brutalist-btn-primary btn-lg text-center">
+                            <i class="fa-solid fa-check me-1"></i>Book Expedition
+                        </a>
+                    {% elif trek.trek_status != 'Open' %}
+                        <button class="brutalist-btn brutalist-btn-secondary btn-lg" disabled>Booking Closed</button>
+                    {% else %}
+                        <button class="brutalist-btn brutalist-btn-secondary btn-lg" disabled>Fully Booked</button>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

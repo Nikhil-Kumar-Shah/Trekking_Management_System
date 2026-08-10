@@ -1,0 +1,24 @@
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - FLASH MESSAGES PARTIAL
+==========================================================================
+DEVELOPER NOTE:
+Renders temporary alert notifications flashed by Flask controllers using `flash()`.
+Maps Flask message categories (success, info, warning, error) to Bootstrap alert classes.
+Included near top of main-container in base.html.
+==========================================================================
+-->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="row">
+        <div class="col-12">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+  {% endif %}
+{% endwith %}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+{#
+==========================================================================
+Trekking Operations Management System (TOMS) - BASE TEMPLATE
+==========================================================================
+DEVELOPER NOTE:
+base.html defines the primary HTML structure for the entire application.
+Child templates (e.g., admin/dashboard.html, user/treks.html) extend this file
+using extends "base.html" and inject page content into block content.
+
+Key Structural Components:
+- Head: Imports Bootstrap 5, FontAwesome icons, and master style.css.
+- Navbar: Shared top navigation bar included via include "partials/navbar.html".
+- Flash Messages: Alert notifications included via include "partials/flash_messages.html".
+- Responsive Grid: Authenticated users get a left sidebar (col-md-3) + main area (col-md-9).
+  Unauthenticated guests get a full-width container (col-md-8 mx-auto).
+- Footer: Shared bottom footer included via include "partials/footer.html".
+==========================================================================
+#}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Trekking Management System{% endblock %}</title>
+    <!-- Link Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome for clean icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Master Custom CSS (Imports base.css, components.css, pages.css) -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Include Shared Navigation Bar -->
+    {% include "partials/navbar.html" %}
+
+    <div class="container main-container">
+        <!-- Include Flash Messages (Alerts) -->
+        {% include "partials/flash_messages.html" %}
+
+        <div class="row">
+            {% if current_user.is_authenticated %}
+                <!-- Left Sidebar for Authenticated Users (Admin / Staff / Trekker) -->
+                <div class="col-md-3 mb-4">
+                    {% include "partials/sidebar.html" %}
+                </div>
+                <!-- Main Content Area with Sidebar -->
+                <div class="col-md-9">
+            {% else %}
+                <!-- Full-Width Content Area for Guests (e.g. Login, Register, Landing) -->
+                <div class="col-md-8 mx-auto">
+            {% endif %}
+                    <div class="content-card">
+                        <!-- Dynamic Page Content Block -->
+                        {% block content %}{% endblock %}
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <!-- Include Shared Footer -->
+    {% include "partials/footer.html" %}
+</body>
+</html>

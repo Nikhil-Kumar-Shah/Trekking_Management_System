@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Trek Participants - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - STAFF PARTICIPANTS LIST
+==========================================================================
+DEVELOPER NOTE:
+Displays list of registered trekkers for a specific trek assigned to staff.
+Flask Controller: `staff.list_participants` in app/routes/staff_routes.py
+
+Key Operations:
+- Medical Check: Staff can view blood group and medical conditions for field safety.
+- Attendance Check-In: Links to `staff.mark_attendance` route to mark present/absent.
+==========================================================================
+-->
+<div class="mb-4 pb-2 border-bottom border-dark">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h3><i class="fa-solid fa-users me-2"></i>Participants for: {{ trek.title }}</h3>
+        <a href="{{ url_for('staff.list_treks') }}" class="brutalist-btn" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px; background-color: #ffffff;">
+            <i class="fa-solid fa-arrow-left me-1"></i>Back to Treks
+        </a>
+    </div>
+    <p class="text-muted">Location: <strong>{{ trek.location }}</strong> | Dates: <strong>{{ trek.start_date.strftime('%Y-%m-%d') }} to {{ trek.end_date.strftime('%Y-%m-%d') }}</strong></p>
+</div>
+
+{% if bookings %}
+    <div class="table-responsive">
+        <table class="table table-hover table-striped align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Trekker</th>
+                    <th>Contact Details</th>
+                    <th>Emergency Info</th>
+                    <th>Medical Conditions</th>
+                    <th>Checked In</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                    <tr>
+                        <td>
+                            <strong class="d-block">{{ booking.trekker.full_name }}</strong>
+                            <span class="badge bg-light text-dark border">Blood: {{ booking.trekker.blood_group or 'N/A' }}</span>
+                        </td>
+                        <td>
+                            <small class="d-block">{{ booking.trekker.email }}</small>
+                            <small class="d-block text-secondary">{{ booking.trekker.phone }}</small>
+                        </td>
+                        <td>
+                            {% if booking.trekker.emergency_contact_name %}
+                                <small class="d-block">{{ booking.trekker.emergency_contact_name }}</small>
+                                <small class="d-block text-secondary">{{ booking.trekker.emergency_contact_phone }}</small>
+                            {% else %}
+                                <span class="text-muted small">Not provided</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <small class="text-danger text-wrap d-block" style="max-width: 250px;">
+                                {{ booking.trekker.medical_conditions or 'No recorded conditions' }}
+                            </small>
+                        </td>
+                        <td>
+                            {% if booking.checked_in %}
+                                <span class="badge bg-success"><i class="fa-solid fa-check-circle"></i> Present</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark"><i class="fa-solid fa-clock"></i> Pending</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('staff.mark_attendance', trek_id=trek.id, booking_id=booking.id) }}" class="brutalist-btn brutalist-btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px;">
+                                <i class="fa-solid fa-clipboard-user me-1"></i>Mark Attendance
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="p-5 text-center text-muted border rounded bg-white shadow-sm">
+        <i class="fa-solid fa-users-slash fa-3x mb-3 text-secondary"></i>
+        <h5>No Participants Registered</h5>
+        <p>No trekkers have signed up for this expedition yet.</p>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Reports & Audit Logs - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - REPORTS & AUDIT LOGS
+==========================================================================
+DEVELOPER NOTE:
+Tabbed interface for viewing administrative reports, state transition logs, and certificates.
+Flask Controller: `admin.view_reports` in app/routes/admin_routes.py
+
+Tab Navigation (`active_tab` query parameter):
+1. `logs`: Displays state transition audit trail for trek status modifications.
+2. `certs`: Displays certificate issuance register with serial numbers.
+3. `completed`: Displays finished trekking campaigns.
+==========================================================================
+-->
+<div class="mb-4 pb-2 border-bottom border-dark">
+    <h3><i class="fa-solid fa-file-invoice me-2"></i>Reports & Audit Logs</h3>
+</div>
+
+<!-- Tab Navigation Header -->
+<ul class="nav nav-tabs mb-4" id="reportTabs">
+    <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'logs' %}active{% endif %}" href="{{ url_for('admin.view_reports', tab='logs') }}">
+            <i class="fa-solid fa-history me-1"></i>Trek Status Logs
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'certs' %}active{% endif %}" href="{{ url_for('admin.view_reports', tab='certs') }}">
+            <i class="fa-solid fa-award me-1"></i>Issued Certificates
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'completed' %}active{% endif %}" href="{{ url_for('admin.view_reports', tab='completed') }}">
+            <i class="fa-solid fa-circle-check me-1"></i>Completed Treks
+        </a>
+    </li>
+</ul>
+
+<!-- Tab Contents Container -->
+<div class="tab-content" id="reportTabsContent">
+    
+    {% if active_tab == 'logs' %}
+    <!-- Trek Status Logs Tab -->
+    <div class="tab-pane active" id="logs" role="tabpanel">
+        <h5 class="mb-3">Trek State Transition Audit Trail</h5>
+        {% if logs %}
+            <div class="table-responsive">
+                <table class="table table-sm table-hover table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Trek Name</th>
+                            <th>Transition</th>
+                            <th>Changed By</th>
+                            <th>Timestamp</th>
+                            <th>Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                            <tr>
+                                <td class="font-weight-bold">{{ log.trek.title }}</td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ log.old_status or 'None' }}</span>
+                                    <i class="fa-solid fa-arrow-right mx-1 text-muted"></i>
+                                    <span class="badge bg-primary">{{ log.new_status }}</span>
+                                </td>
+                                <td>{{ log.editor.full_name }} ({{ log.editor.role }})</td>
+                                <td>{{ log.changed_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                <td><small class="text-wrap">{{ log.reason or 'N/A' }}</small></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted p-3 text-center">No status transitions recorded yet.</p>
+        {% endif %}
+    </div>
+    {% elif active_tab == 'certs' %}
+    
+    <!-- Issued Certificates Tab -->
+    <div class="tab-pane active" id="certs" role="tabpanel">
+        <h5 class="mb-3">Certificate Issuance Register</h5>
+        {% if certificates %}
+            <div class="table-responsive">
+                <table class="table table-sm table-hover table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Certificate ID</th>
+                            <th>Booking ID</th>
+                            <th>Trekker Name</th>
+                            <th>Trek Completed</th>
+                            <th>Generated At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cert in certificates %}
+                            <tr>
+                                <td class="font-weight-bold text-monospace">{{ cert.certificate_number }}</td>
+                                <td>#{{ cert.booking_id }}</td>
+                                <td>{{ cert.booking.trekker.full_name }}</td>
+                                <td>{{ cert.booking.trek.title }}</td>
+                                <td>{{ cert.generated_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted p-3 text-center">No certificates have been issued yet.</p>
+        {% endif %}
+    </div>
+    {% elif active_tab == 'completed' %}
+    
+    <!-- Completed Treks Tab -->
+    <div class="tab-pane active" id="history" role="tabpanel">
+        <h5 class="mb-3">Finished Trekking Campaigns</h5>
+        {% if completed_treks %}
+            <div class="table-responsive">
+                <table class="table table-sm table-hover table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Trek Campaign</th>
+                            <th>Location</th>
+                            <th>Duration (Days)</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for trek in completed_treks %}
+                            <tr>
+                                <td class="font-weight-bold">{{ trek.title }}</td>
+                                <td>{{ trek.location }}</td>
+                                <td>{{ trek.duration_days }} days</td>
+                                <td>{{ trek.start_date.strftime('%Y-%m-%d') }}</td>
+                                <td>{{ trek.end_date.strftime('%Y-%m-%d') }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted p-3 text-center">No trekking campaigns have been marked completed yet.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

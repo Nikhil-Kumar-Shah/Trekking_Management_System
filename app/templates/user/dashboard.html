@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}My Dashboard - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - USER DASHBOARD TEMPLATE
+==========================================================================
+DEVELOPER NOTE:
+This is the main trekker dashboard portal (Flask route: `/dashboard`).
+Controller: `user.dashboard` in app/routes/user_routes.py
+
+Key Elements:
+- Upcoming Bookings: Lists confirmed upcoming expeditions booked by the current user.
+- Notifications Card: Shows recent notifications and alerts.
+==========================================================================
+-->
+<div class="mb-4 pb-2 border-bottom">
+    <h3><i class="fa-solid fa-gauge me-2"></i>My Trekker Dashboard</h3>
+    <p class="text-muted">Welcome, {{ current_user.full_name }}. Explore new expeditions, review bookings, and see alerts.</p>
+</div>
+
+<div class="row">
+    <!-- Upcoming Bookings Panel -->
+    <div class="col-md-7 mb-4">
+        <div class="brutalist-card brutalist-card--beige h-100">
+            <div class="brutalist-card__header">
+                <span class="brutalist-card__alert"><i class="fa-solid fa-ticket me-2"></i>My Upcoming Trips</span>
+            </div>
+            
+            {% if upcoming_bookings %}
+                <div class="list-group list-group-flush mt-3">
+                    {% for booking in upcoming_bookings %}
+                        <div class="list-group-item px-0 py-3 border-bottom" style="background-color: transparent !important;">
+                            <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                                <h6 class="mb-0 text-dark font-weight-bold">{{ booking.trek.title }}</h6>
+                                <span class="badge bg-success border-dark text-white">Confirmed</span>
+                            </div>
+                            <small class="d-block text-secondary mb-2">
+                                <i class="fa-solid fa-calendar me-1"></i>Dates: {{ booking.trek.start_date.strftime('%Y-%m-%d') }} to {{ booking.trek.end_date.strftime('%Y-%m-%d') }}
+                            </small>
+                            <small class="d-block text-secondary mb-3">
+                                <i class="fa-solid fa-map-location-dot me-1"></i>Gathering Point: {{ booking.trek.meeting_point }}
+                            </small>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="{{ url_for('user.trek_detail', trek_id=booking.trek.id) }}" class="brutalist-btn" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px; background-color: #ffffff;">
+                                    <i class="fa-solid fa-info-circle me-1"></i>Trek Info
+                                </a>
+                                {% if booking.trek.trek_status not in ['In Progress', 'Completed', 'Cancelled'] %}
+                                <form action="{{ url_for('user.cancel_booking', booking_id=booking.id) }}" method="POST">
+                                    <button type="submit" class="brutalist-btn brutalist-btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px;">
+                                        Cancel Booking
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-5 text-muted">
+                    <i class="fa-solid fa-hiking fa-3x mb-3 text-dark"></i>
+                    <h5>No Scheduled Treks</h5>
+                    <p class="small">Ready for an adventure?</p>
+                    <a href="{{ url_for('user.list_treks') }}" class="brutalist-btn brutalist-btn-primary mt-2">
+                        <i class="fa-solid fa-search me-1"></i>Search Open Treks
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Recent Notifications Panel -->
+    <div class="col-md-5 mb-4">
+        <div class="brutalist-card brutalist-card--yellow h-100">
+            <div class="brutalist-card__header d-flex justify-content-between align-items-center">
+                <span class="brutalist-card__alert"><i class="fa-solid fa-bell me-2"></i>Alerts</span>
+                <a href="{{ url_for('user.list_notifications') }}" class="brutalist-btn" style="padding: 0.15rem 0.4rem; font-size: 0.75rem; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px; background-color: #ffffff;">View All</a>
+            </div>
+            
+            {% if notifications %}
+                <div class="list-group list-group-flush mt-3">
+                    {% for notif in notifications %}
+                        <div class="list-group-item px-0 py-2 border-bottom {% if not notif.is_read %}bg-light px-2 rounded mb-2 border border-2 border-dark{% endif %}" style="background-color: transparent !important;">
+                            <div class="d-flex w-100 justify-content-between">
+                                <strong class="mb-1 text-dark small">{{ notif.title }}</strong>
+                                <small class="text-muted font-monospace">{{ notif.created_at.strftime('%m-%d %H:%M') }}</small>
+                            </div>
+                            <p class="mb-1 text-secondary small text-wrap">{{ notif.message }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-5 text-muted">
+                    <i class="fa-solid fa-bell-slash fa-2x mb-3 text-secondary"></i>
+                    <p class="small">No notifications received.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Unauthorized Access - 401{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - 401 UNAUTHORIZED ERROR
+==========================================================================
+DEVELOPER NOTE:
+Rendered when an unauthenticated user attempts to access a protected Flask route.
+==========================================================================
+-->
+<div class="text-center py-5">
+    <i class="fa-solid fa-lock fa-4x text-warning mb-4"></i>
+    <h1 class="display-5 text-dark font-weight-bold">401 - Unauthorized</h1>
+    <p class="lead text-secondary my-3">You must be logged in to access this page.</p>
+    <div class="mt-4">
+        <a href="{{ url_for('auth.login') }}" class="btn btn-primary">
+            <i class="fa-solid fa-right-to-bracket me-1"></i>Go to Log In
+        </a>
+    </div>
+</div>
+{% endblock %}

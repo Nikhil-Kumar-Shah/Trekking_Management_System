@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Staff Dashboard - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - STAFF DASHBOARD TEMPLATE
+==========================================================================
+DEVELOPER NOTE:
+This is the main staff portal dashboard (Flask route: `/staff/dashboard`).
+Controller: `staff.dashboard` in app/routes/staff_routes.py
+
+Data Context Passed from Flask Route:
+- `total_assigned_count`: Count of treks assigned to the logged-in staff member.
+- `in_progress_count`: Count of assigned treks currently in progress.
+- `total_participants`: Total registered trekkers across assigned treks.
+- `checked_in_participants`: Count of checked-in trekkers.
+- `recent_bookings`: Recent bookings for assigned treks.
+==========================================================================
+-->
+<div class="mb-4 pb-2 border-bottom">
+    <h3><i class="fa-solid fa-chart-simple me-2"></i>Staff Dashboard</h3>
+    <p class="text-muted">Welcome, {{ current_user.full_name }}. Monitor stats, manage your assigned treks, and coordinate trekker attendance.</p>
+</div>
+
+<!-- Metrics Row -->
+<div class="row mb-5">
+    <div class="col-md-3 col-sm-6 mb-4">
+        <div class="metric-box">
+            <div class="metric-num">{{ total_assigned_count }}</div>
+            <div class="metric-label">Assigned Treks</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-4">
+        <div class="metric-box">
+            <div class="metric-num text-info">{{ in_progress_count }}</div>
+            <div class="metric-label">In Progress</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-4">
+        <div class="metric-box">
+            <div class="metric-num text-success">{{ total_participants }}</div>
+            <div class="metric-label">Total Trekkers</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-4">
+        <div class="metric-box">
+            <div class="metric-num text-warning">{{ checked_in_participants }}</div>
+            <div class="metric-label">Checked In</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Assigned Treks Column -->
+    <div class="col-lg-8 mb-4">
+        <div class="brutalist-card h-100">
+            <div class="brutalist-card__header">
+                <span class="brutalist-card__alert">Assigned Trek Details</span>
+            </div>
+            {% if treks %}
+                <div class="table-responsive mt-3">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>Trek Name</th>
+                                <th>Dates</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for trek in treks %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ trek.title }}</strong><br>
+                                        <small class="text-secondary">{{ trek.location }} ({{ trek.altitude }}m)</small>
+                                    </td>
+                                    <td>
+                                        <small class="d-block">{{ trek.start_date.strftime('%Y-%m-%d') }}</small>
+                                        <small class="text-muted">to {{ trek.end_date.strftime('%Y-%m-%d') }}</small>
+                                    </td>
+                                    <td>
+                                        {% if trek.trek_status == 'Open' %}
+                                            <span class="badge bg-success">Open</span>
+                                        {% elif trek.trek_status == 'Closed' %}
+                                            <span class="badge bg-secondary">Closed</span>
+                                        {% elif trek.trek_status == 'In Progress' %}
+                                            <span class="badge bg-info text-dark">In Progress</span>
+                                        {% elif trek.trek_status == 'Completed' %}
+                                            <span class="badge bg-primary">Completed</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Cancelled</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-column gap-1">
+                                            <a href="{{ url_for('staff.list_participants', trek_id=trek.id) }}" class="brutalist-btn" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; text-align: center; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px;">
+                                                Attendance
+                                            </a>
+                                            <a href="{{ url_for('staff.update_status', trek_id=trek.id) }}" class="brutalist-btn brutalist-btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; text-align: center; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px;">
+                                                Status
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted text-center py-4">No trek assignments found.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recent Bookings / Activities Column -->
+    <div class="col-lg-4 mb-4">
+        <div class="brutalist-card brutalist-card--beige h-100">
+            <div class="brutalist-card__header">
+                <span class="brutalist-card__alert">Recent Bookings</span>
+            </div>
+            {% if recent_bookings %}
+                <div class="list-group list-group-flush mt-3">
+                    {% for booking in recent_bookings %}
+                        <div class="list-group-item px-0 border-bottom border-1 py-3" style="background-color: transparent !important;">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <strong class="text-dark">{{ booking.trekker.full_name }}</strong>
+                                <span class="small font-monospace text-secondary">#{{ booking.id }}</span>
+                            </div>
+                            <div class="small text-secondary mb-1">Booked: <strong>{{ booking.trek.title }}</strong></div>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span class="small font-monospace text-muted">{{ booking.booking_date.strftime('%Y-%m-%d %H:%M') }}</span>
+                                {% if booking.checked_in %}
+                                    <span class="badge bg-success">Checked In</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Absent</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted text-center py-4">No recent bookings recorded.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,527 @@
+/* ==========================================================================
+   Trek Operations Management System (TOMS) - COMPONENTS STYLESHEET
+   ==========================================================================
+   DEVELOPER REFERENCE:
+   This file controls reusable UI elements and component styling.
+
+   Where to modify key components:
+   - Cards & Shadow Borders: Look under SECTION 1 (Brutalist Cards)
+   - Buttons & Color Themes: Look under SECTION 2 (Brutalist Buttons)
+   - Forms & Input Boxes: Look under SECTION 3 (Form Inputs)
+   - Bauhaus Custom Containers: Look under SECTION 4 (Bauhaus Tokens)
+   - Navigation Header: Look under SECTION 5 (Navbar)
+   - Left Sidebar: Look under SECTION 6 (Sidebar)
+   - Data Tables: Look under SECTION 7 (Tables)
+   - Status Badges: Look under SECTION 8 (Badges)
+   - Dashboard Counters: Look under SECTION 9 (Metric Display Boxes)
+   - Footer: Look under SECTION 10 (Footer)
+   ========================================================================== */
+
+/* ==========================================================================
+   1. BRUTALIST CARDS
+   --------------------------------------------------------------------------
+   DEVELOPER NOTE:
+   Controls the signature brutalist card container with thick borders and 
+   offset drop shadows. If asked to adjust card shadows or borders, edit here.
+   ========================================================================== */
+.brutalist-card {
+    border: var(--brutalist-border-width) solid var(--ui-border);
+    background-color: var(--ui-card-bg);
+    padding: 1.5rem;
+    box-shadow: var(--brutalist-shadow-offset) var(--brutalist-shadow-offset) 0 var(--ui-border);
+    transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+    margin-bottom: 2rem;
+}
+
+.brutalist-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 10px 10px 0 var(--ui-border);
+}
+
+/* Brutalist Card Color Variants */
+.brutalist-card--yellow {
+    background-color: var(--bauhaus-yellow) !important;
+    color: var(--ui-text) !important;
+}
+.brutalist-card--yellow h1, .brutalist-card--yellow h2, .brutalist-card--yellow h3, 
+.brutalist-card--yellow h4, .brutalist-card--yellow h5, .brutalist-card--yellow h6,
+.brutalist-card--yellow p, .brutalist-card--yellow small, .brutalist-card--yellow span,
+.brutalist-card--yellow div {
+    color: var(--ui-text) !important;
+}
+
+.brutalist-card--blue {
+    background-color: var(--bauhaus-blue) !important;
+    color: #ffffff !important;
+}
+.brutalist-card--blue h1, .brutalist-card--blue h2, .brutalist-card--blue h3, 
+.brutalist-card--blue h4, .brutalist-card--blue h5, .brutalist-card--blue h6,
+.brutalist-card--blue p, .brutalist-card--blue small, .brutalist-card--blue span,
+.brutalist-card--blue div, .brutalist-card--blue .brutalist-card__alert {
+    color: #ffffff !important;
+}
+
+.brutalist-card--coral {
+    background-color: var(--bauhaus-coral) !important;
+    color: #ffffff !important;
+}
+.brutalist-card--coral h1, .brutalist-card--coral h2, .brutalist-card--coral h3, 
+.brutalist-card--coral h4, .brutalist-card--coral h5, .brutalist-card--coral h6,
+.brutalist-card--coral p, .brutalist-card--coral small, .brutalist-card--coral span,
+.brutalist-card--coral div, .brutalist-card--coral .brutalist-card__alert {
+    color: #ffffff !important;
+}
+
+.brutalist-card--accent {
+    background-color: var(--ui-accent) !important;
+    color: #ffffff !important;
+}
+.brutalist-card--accent h1, .brutalist-card--accent h2, .brutalist-card--accent h3, 
+.brutalist-card--accent h4, .brutalist-card--accent h5, .brutalist-card--accent h6,
+.brutalist-card--accent p, .brutalist-card--accent small, .brutalist-card--accent span,
+.brutalist-card--accent div, .brutalist-card--accent .brutalist-card__alert {
+    color: #ffffff !important;
+}
+
+.brutalist-card--beige {
+    background-color: var(--ui-bg) !important;
+    color: var(--ui-text) !important;
+}
+.brutalist-card--beige h1, .brutalist-card--beige h2, .brutalist-card--beige h3, 
+.brutalist-card--beige h4, .brutalist-card--beige h5, .brutalist-card--beige h6,
+.brutalist-card--beige p, .brutalist-card--beige small, .brutalist-card--beige span,
+.brutalist-card--beige div, .brutalist-card--beige .brutalist-card__alert {
+    color: var(--ui-text) !important;
+}
+
+.brutalist-card__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 2px solid var(--ui-border);
+    padding-bottom: 1rem;
+}
+
+.brutalist-card__alert {
+    font-weight: 900;
+    color: var(--ui-text);
+    font-size: 1.5rem;
+    text-transform: uppercase;
+}
+
+.brutalist-card__message {
+    margin-top: 1rem;
+    color: var(--ui-text);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    border-bottom: 2px solid var(--ui-border);
+    padding-bottom: 1rem;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   2. BRUTALIST BUTTONS
+   --------------------------------------------------------------------------
+   DEVELOPER NOTE:
+   Custom button controls with thick borders, sharp corners, uppercase labels,
+   and interactive hover/active translation animations.
+   ========================================================================== */
+.brutalist-btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: 3px solid var(--ui-border);
+    background-color: var(--ui-card-bg);
+    color: var(--ui-text);
+    position: relative;
+    transition: all 0.15s ease;
+    box-shadow: 4px 4px 0 var(--ui-border);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.brutalist-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--ui-border);
+    color: var(--ui-text);
+}
+
+.brutalist-btn:active {
+    transform: translate(4px, 4px);
+    box-shadow: none;
+}
+
+.brutalist-btn-primary {
+    background-color: var(--bauhaus-yellow);
+}
+
+.brutalist-btn-success {
+    background-color: var(--bauhaus-blue);
+    color: #ffffff;
+}
+.brutalist-btn-success:hover {
+    color: #ffffff;
+}
+
+.brutalist-btn-danger {
+    background-color: var(--ui-accent);
+    color: #ffffff;
+}
+.brutalist-btn-danger:hover {
+    color: #ffffff;
+}
+
+.brutalist-btn-secondary {
+    background-color: #e9ecef;
+}
+
+/* ==========================================================================
+   3. FORM INPUTS & SELECTS
+   --------------------------------------------------------------------------
+   DEVELOPER NOTE:
+   Overrides standard Bootstrap form controls to introduce sharp corners, 
+   monospaced typography, thick borders, and offset focus states.
+   ========================================================================== */
+.form-control, .form-select {
+    border: 3px solid var(--ui-border) !important;
+    border-radius: 0 !important;
+    padding: 0.75rem !important;
+    font-family: 'Space Mono', monospace;
+    font-weight: 500;
+    background-color: #ffffff;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+}
+
+.form-control:focus, .form-select:focus {
+    box-shadow: 4px 4px 0 var(--ui-border) !important;
+    border-color: var(--ui-border) !important;
+    outline: none !important;
+}
+
+/* ==========================================================================
+   4. BAUHAUS CONTAINERS & RADIO SELECTORS
+   --------------------------------------------------------------------------
+   DEVELOPER NOTE:
+   Geometric container components and pure CSS interactive selection shapes
+   used for demo credentials and custom option groups.
+   ========================================================================== */
+.bauhaus-container {
+    background: var(--ui-bg);
+    padding: 30px;
+    border: 4px solid var(--ui-border);
+    box-shadow: var(--brutalist-shadow-offset) var(--brutalist-shadow-offset) 0 var(--ui-border);
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--ui-text);
+    margin-bottom: 2rem;
+}
+
+.bauhaus-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border-left: 8px solid var(--ui-border);
+    padding-left: 20px;
+}
+
+.bauhaus-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 5px;
+}
+
+.bauhaus-header .num {
+    font-size: 1.2rem;
+    font-weight: 900;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.bauhaus-header .title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: 700;
+}
+
+.radio-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+.radio-item:hover {
+    transform: translateX(8px);
+}
+
+.radio-item input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.selector-box {
+    width: 28px;
+    height: 28px;
+    border: 3px solid var(--ui-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    position: relative;
+    background: transparent;
+    transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.shape {
+    width: 0;
+    height: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    opacity: 0;
+}
+
+.shape-circle {
+    border-radius: 50%;
+    background: var(--ui-accent);
+}
+
+.shape-square {
+    background: var(--bauhaus-blue);
+}
+
+.shape-triangle {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 16px solid var(--bauhaus-yellow);
+    background: transparent !important;
+}
+
+/* Checked States for Custom Radio Shapes */
+.radio-item input:checked + .selector-box {
+    background: var(--ui-border);
+}
+
+.radio-item input:checked + .selector-box .shape {
+    opacity: 1;
+    width: 14px;
+    height: 14px;
+}
+
+.radio-item input:checked + .selector-box .shape-triangle {
+    width: 0;
+    height: 0;
+    transform: translateY(-2px);
+}
+
+.label-text {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    transition: color 0.3s ease;
+}
+
+.radio-item input:checked ~ .label-text {
+    color: var(--ui-accent);
+}
+
+.bauhaus-decoration {
+    position: absolute;
+    top: -10px;
+    right: -20px;
+    width: 30px;
+    height: 30px;
+    pointer-events: none;
+}
+
+.line-v {
+    position: absolute;
+    width: 3px;
+    height: 80px;
+    background: var(--bauhaus-yellow);
+    top: 0;
+    right: 5px;
+}
+
+.line-h {
+    position: absolute;
+    width: 50px;
+    height: 8px;
+    background: var(--bauhaus-blue);
+    bottom: -30px;
+    right: -10px;
+    z-index: -1;
+}
+
+/* ==========================================================================
+   5. NAVBAR
+   --------------------------------------------------------------------------
+   DEVELOPER NOTE:
+   Header navbar branding and top-navigation link styling.
+   HTML defined in app/templates/partials/navbar.html.
+   ========================================================================== */
+.navbar {
+    border-bottom: 6px solid var(--ui-border) !important;
+    background-color: #ffffff !important;
+}
+
+.navbar-brand {
+    font-weight: 900 !important;
+    text-transform: uppercase;
+    color: var(--ui-text) !important;
+    letter-spacing: -0.03em;
+    font-size: 1.4rem;
+}
+
+.nav-link {
+    color: var(--ui-text) !important;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.nav-link:hover {
+    color: var(--ui-accent) !important;
+}
+
+/* ==========================================================================
+   6. SIDEBAR
+   --------------------------------------------------------------------------
+   DEVELOPER NOTE:
+   Left sidebar menu container styling and hover interactions.
+   HTML defined in app/templates/partials/sidebar.html.
+   ========================================================================== */
+.sidebar {
+    background-color: var(--ui-card-bg);
+    border: var(--brutalist-border-width) solid var(--ui-border);
+    box-shadow: 5px 5px 0 var(--ui-border);
+    padding: 1.5rem;
+}
+
+.sidebar .list-group-item {
+    font-weight: 700;
+    text-transform: uppercase;
+    border: none !important;
+    border-bottom: 2px solid var(--ui-border) !important;
+    padding: 0.75rem 0.5rem !important;
+    color: var(--ui-text) !important;
+    background-color: transparent !important;
+}
+
+.list-group-item:last-child {
+    border-bottom: none !important;
+}
+
+.list-group-item:hover {
+    color: var(--ui-accent) !important;
+    transform: translateX(4px);
+    transition: all 0.15s ease;
+}
+
+/* ==========================================================================
+   7. TABLES
+   --------------------------------------------------------------------------
+   DEVELOPER NOTE:
+   Brutalist table styling with solid header bars and monospaced cell text.
+   ========================================================================== */
+.table {
+    border: var(--brutalist-border-width) solid var(--ui-border) !important;
+    background-color: #ffffff !important;
+}
+
+.table th {
+    background-color: var(--ui-border) !important;
+    color: #ffffff !important;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-bottom: var(--brutalist-border-width) solid var(--ui-border) !important;
+}
+
+.table td {
+    border-bottom: 2px solid var(--ui-border) !important;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   8. BADGES & STATUS INDICATORS
+   --------------------------------------------------------------------------
+   DEVELOPER NOTE:
+   Status badge overrides featuring sharp corners and high-contrast colors.
+   ========================================================================== */
+.badge {
+    border-radius: 0 !important;
+    border: 2px solid var(--ui-border);
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.4em 0.8em !important;
+}
+
+.bg-primary { background-color: var(--bauhaus-yellow) !important; color: var(--ui-text) !important; }
+.bg-success { background-color: var(--bauhaus-blue) !important; color: #ffffff !important; }
+.bg-danger { background-color: var(--ui-accent) !important; color: #ffffff !important; }
+.bg-secondary { background-color: #e9ecef !important; color: var(--ui-text) !important; }
+.bg-info { background-color: var(--bauhaus-coral) !important; color: #ffffff !important; }
+
+/* ==========================================================================
+   9. METRIC DISPLAY BOXES
+   --------------------------------------------------------------------------
+   DEVELOPER NOTE:
+   Counter metric cards displayed on Admin, Staff, and User dashboards.
+   ========================================================================== */
+.metric-box {
+    border: 4px solid var(--ui-border);
+    padding: 1.5rem;
+    background-color: #ffffff;
+    box-shadow: 6px 6px 0 var(--ui-border);
+    text-align: center;
+}
+
+.metric-num {
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    color: var(--ui-accent);
+}
+
+.metric-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    color: var(--ui-text);
+}
+
+/* ==========================================================================
+   10. FOOTER
+   --------------------------------------------------------------------------
+   DEVELOPER NOTE:
+   Application bottom footer bar styling.
+   HTML defined in app/templates/partials/footer.html.
+   ========================================================================== */
+footer {
+    border-top: 6px solid var(--ui-border);
+    background-color: #ffffff !important;
+    color: var(--ui-text) !important;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+footer span {
+    color: var(--ui-text) !important;
+}

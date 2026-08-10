@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Log In - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - LOGIN TEMPLATE
+==========================================================================
+DEVELOPER NOTE:
+This template renders the user login form.
+Flask Controller: `auth.login` in app/routes/auth_routes.py
+
+Key Logic:
+- CSRF Protection: `{{ form.hidden_tag() }}` generates hidden CSRF token fields.
+- WTForms Fields: Renders email, password, and remember_me fields.
+- Server Validation: If invalid credentials or form errors occur, Flask re-renders
+  the form with field error messages (`is-invalid` class & `invalid-feedback`).
+- Submit Target: Form POSTs directly back to `auth.login` route.
+==========================================================================
+-->
+<div class="row mt-4">
+    <div class="col-md-6 mx-auto">
+        <div class="brutalist-card">
+            <div class="brutalist-card__header mb-4">
+                <span class="brutalist-card__alert"><i class="fa-solid fa-right-to-bracket me-2"></i>Account Login</span>
+            </div>
+            
+            <form method="POST" action="" novalidate>
+                {{ form.hidden_tag() }}
+                
+                <!-- Email Field -->
+                <div class="mb-3">
+                    {{ form.email.label(class="form-label font-weight-bold text-uppercase small") }}
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control is-invalid", placeholder="enter email address") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control", placeholder="enter email address") }}
+                    {% endif %}
+                </div>
+                
+                <!-- Password Field -->
+                <div class="mb-3">
+                    {{ form.password.label(class="form-label font-weight-bold text-uppercase small") }}
+                    {% if form.password.errors %}
+                        {{ form.password(class="form-control is-invalid", placeholder="enter password") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.password(class="form-control", placeholder="enter password") }}
+                    {% endif %}
+                </div>
+                
+                <!-- Remember Me Checkbox -->
+                <div class="mb-3 form-check">
+                    {{ form.remember_me(class="form-check-input border-dark") }}
+                    {{ form.remember_me.label(class="form-check-label font-weight-bold text-uppercase small") }}
+                </div>
+                
+                <!-- Form Submit Action -->
+                <div class="mt-4">
+                    <button type="submit" class="brutalist-btn brutalist-btn-primary w-100">
+                        Log In
+                    </button>
+                </div>
+            </form>
+            
+            <div class="text-center mt-4 pt-3 border-top border-2 border-dark">
+                <p class="mb-0">Do not have an account? <a href="{{ url_for('auth.register') }}" class="font-weight-bold text-dark">Register here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

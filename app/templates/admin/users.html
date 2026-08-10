@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Trekkers - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - ADMIN USERS MANAGEMENT
+==========================================================================
+DEVELOPER NOTE:
+This template displays all registered trekker accounts and medical information.
+Flask Controller: `admin.list_users` in app/routes/admin_routes.py
+
+Key Logic:
+- Blacklist Toggle: Admin can block/unblock users using `admin.toggle_blacklist` route.
+- Medical & Emergency Details: Displays blood group, medical conditions, and emergency contacts.
+==========================================================================
+-->
+<div class="mb-4 pb-2 border-bottom border-dark">
+    <h3><i class="fa-solid fa-users me-2"></i>Manage Registered Trekkers</h3>
+</div>
+
+{% if users %}
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Trekker Name</th>
+                    <th>Contact Details</th>
+                    <th>Medical Info</th>
+                    <th>Emergency Contact</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr class="{% if user.is_blacklisted %}table-danger{% endif %}">
+                        <td class="font-weight-bold">{{ user.full_name }}</td>
+                        <td>
+                            <small class="d-block">{{ user.email }}</small>
+                            <small class="d-block text-secondary">{{ user.phone }}</small>
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary mb-1">Blood: {{ user.blood_group or 'N/A' }}</span>
+                            <small class="d-block text-muted text-wrap" style="max-width: 200px;">
+                                {{ user.medical_conditions or 'No recorded conditions' }}
+                            </small>
+                        </td>
+                        <td>
+                            {% if user.emergency_contact_name %}
+                                <small class="d-block">{{ user.emergency_contact_name }}</small>
+                                <small class="d-block text-secondary">{{ user.emergency_contact_phone }}</small>
+                            {% else %}
+                                <span class="text-muted small">Not provided</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.is_blacklisted %}
+                                <span class="badge bg-danger">Blacklisted</span>
+                            {% else %}
+                                <span class="badge bg-success">Active</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form action="{{ url_for('admin.toggle_blacklist', user_id=user.id) }}" method="POST">
+                                {% if user.is_blacklisted %}
+                                    <button type="submit" class="btn btn-sm btn-outline-success">
+                                        <i class="fa-solid fa-check"></i> Unblacklist
+                                    </button>
+                                {% else %}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="fa-solid fa-ban"></i> Blacklist
+                                    </button>
+                                {% endif %}
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="p-5 text-center text-muted border rounded bg-light">
+        <i class="fa-solid fa-users fa-3x mb-3 text-secondary"></i>
+        <h5>No Registered Trekkers</h5>
+        <p>User accounts will display here when they register through the system.</p>
+    </div>
+{% endif %}
+{% endblock %}

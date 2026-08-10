@@ -1,0 +1,71 @@
+/* ==========================================================================
+   Trek Operations Management System (TOMS) - BASE STYLESHEET
+   ==========================================================================
+   DEVELOPER REFERENCE:
+   This file contains global theme variables, root color palettes, global body
+   styling, and heading typography definitions.
+
+   Where to modify global theme attributes:
+   - Primary Accent Color: Change --ui-accent
+   - Background Color: Change --ui-bg
+   - Card Background: Change --ui-card-bg
+   - Secondary Bauhaus Colors: Change --bauhaus-yellow, --bauhaus-blue, --bauhaus-coral
+   - Global Typography / Fonts: Change body or heading font-family definitions below
+   ========================================================================== */
+
+/* ==========================================================================
+   1. THEME VARIABLES & DESIGN TOKENS
+   --------------------------------------------------------------------------
+   DEVELOPER NOTE:
+   Change main application colors and brutalist shadow/border parameters here.
+   These variables are referenced throughout components.css and pages.css.
+   ========================================================================== */
+:root {
+    /* Color Palette */
+    --ui-bg: #f2f0e9;             /* Cream/Off-white main background */
+    --ui-card-bg: #ffffff;        /* Pure white card surface background */
+    --ui-text: #1a1a1a;           /* Dark typography text color */
+    --ui-accent: #e63946;         /* Orange/Red vibrant accent color */
+    --ui-border: #1a1a1a;         /* High-contrast thick border color */
+    
+    /* Bauhaus Palette Accents */
+    --bauhaus-yellow: #f4a261;    /* Warm yellow accent for primary highlights */
+    --bauhaus-blue: #2a9d8f;      /* Teal/Blue accent for success states */
+    --bauhaus-coral: #e76f51;     /* Coral accent for secondary highlights */
+    
+    /* Brutalist Shadow & Border Dimensions */
+    --brutalist-shadow-offset: 8px; /* Offset box shadow distance */
+    --brutalist-border-width: 4px;  /* Thick border outline width */
+}
+
+/* Import Google Fonts (Space Grotesk & Space Mono) */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+/* ==========================================================================
+   2. GLOBAL / BASE RESETS
+   --------------------------------------------------------------------------
+   DEVELOPER NOTE:
+   Controls full-page height flexbox layout ensuring sticky footer behavior.
+   ========================================================================== */
+body {
+    background-color: var(--ui-bg);
+    color: var(--ui-text);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ==========================================================================
+   3. TYPOGRAPHY
+   --------------------------------------------------------------------------
+   DEVELOPER NOTE:
+   Defines uppercase bold headings with custom letter spacing across all pages.
+   ========================================================================== */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    color: var(--ui-text);
+}

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Treks - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - BROWSE TREKS TEMPLATE
+==========================================================================
+DEVELOPER NOTE:
+Template for searching and browsing active open trekking expeditions.
+Flask Controller: `user.list_treks` in app/routes/user_routes.py
+
+Key Elements:
+- Filter Form: GET form submitting search query `q` and `difficulty` level.
+- Trek Cards: Jinja loop renders trek cards with dynamic brutalist colors (`yellow`, `blue`, `coral`).
+- Action Buttons: Details link (`user.trek_detail`), Book Now link (`user.book_trek`), or disabled states if full/already booked.
+==========================================================================
+-->
+<div class="mb-4 pb-2 border-bottom">
+    <h3><i class="fa-solid fa-compass me-2"></i>Browse Trekking Expeditions</h3>
+    <p class="text-muted">Explore upcoming trekking courses and find your next mountain venture.</p>
+</div>
+
+<!-- Search and Filter Form -->
+<form method="GET" action="{{ url_for('user.list_treks') }}" class="row g-3 mb-4 p-3 bg-white border border-4 border-dark" style="box-shadow: 4px 4px 0 var(--ui-border);">
+    <div class="col-md-6">
+        <label for="q" class="form-label font-weight-bold text-uppercase small">Search Trek / Location</label>
+        <input type="text" class="form-control" name="q" id="q" placeholder="e.g. Annapurna, Pokhara..." value="{{ search_q or '' }}">
+    </div>
+    <div class="col-md-4">
+        <label for="difficulty" class="form-label font-weight-bold text-uppercase small">Difficulty Level</label>
+        <select class="form-select" name="difficulty" id="difficulty">
+            <option value="">All Difficulty Levels</option>
+            <option value="Easy" {% if difficulty == 'Easy' %}selected{% endif %}>Easy</option>
+            <option value="Moderate" {% if difficulty == 'Moderate' %}selected{% endif %}>Moderate</option>
+            <option value="Hard" {% if difficulty == 'Hard' %}selected{% endif %}>Hard</option>
+        </select>
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="brutalist-btn brutalist-btn-primary w-100" style="padding: 0.65rem 0.5rem; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px;">
+            <i class="fa-solid fa-filter me-1"></i>Filter
+        </button>
+    </div>
+</form>
+
+<!-- Treks List -->
+{% if treks %}
+    <div class="row">
+        {% for trek in treks %}
+            {% set colors = ['yellow', 'blue', 'coral'] %}
+            {% set color = colors[loop.index0 % 3] %}
+            <div class="col-md-6 mb-4">
+                <div class="brutalist-card brutalist-card--{{ color }} h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="brutalist-card__header border-dark d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge bg-primary text-dark border-dark">{{ trek.difficulty_level }}</span>
+                            <span class="small font-monospace {% if color == 'blue' or color == 'coral' %}text-light{% else %}text-muted{% endif %}">{{ trek.duration_days }} Days</span>
+                        </div>
+                        <h5 class="text-uppercase font-weight-bold mb-2">{{ trek.title }}</h5>
+                        <h6 class="mb-3 {% if color == 'blue' or color == 'coral' %}text-light{% else %}text-muted{% endif %}">
+                            <i class="fa-solid fa-map-location-dot me-1"></i>{{ trek.location }}
+                        </h6>
+                        <p class="small text-truncate-3 mb-3">{{ trek.description }}</p>
+                        
+                        <ul class="list-unstyled small font-monospace {% if color == 'blue' or color == 'coral' %}text-light{% else %}text-secondary{% endif %}">
+                            <li class="mb-1"><i class="fa-solid fa-mountain me-1"></i><strong>Altitude:</strong> {{ trek.altitude }}m</li>
+                            <li class="mb-1"><i class="fa-solid fa-users me-1"></i><strong>Available:</strong> {{ trek.available_slots }} / {{ trek.max_slots }} spots</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="d-flex gap-2 mt-4 pt-3 border-top border-2 border-dark">
+                        <a href="{{ url_for('user.trek_detail', trek_id=trek.id) }}" class="brutalist-btn flex-fill text-center" style="background-color: var(--ui-card-bg) !important; color: var(--ui-text) !important; padding: 0.4rem; font-size: 0.85rem; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px; margin: 0;">
+                            <i class="fa-solid fa-info-circle me-1"></i>Details
+                        </a>
+                        {% if trek.id in booked_trek_ids %}
+                            <button class="brutalist-btn brutalist-btn-success flex-fill text-center" style="padding: 0.4rem; font-size: 0.85rem; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px; margin: 0;" disabled>
+                                <i class="fa-solid fa-circle-check me-1"></i>Booked ✓
+                            </button>
+                        {% elif trek.available_slots > 0 %}
+                            <a href="{{ url_for('user.book_trek', trek_id=trek.id) }}" class="brutalist-btn brutalist-btn-primary flex-fill text-center" style="padding: 0.4rem; font-size: 0.85rem; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px; margin: 0;">
+                                <i class="fa-solid fa-ticket me-1"></i>Book Now
+                            </a>
+                        {% else %}
+                            <button class="brutalist-btn brutalist-btn-secondary flex-fill text-center" style="padding: 0.4rem; font-size: 0.85rem; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px; margin: 0;" disabled>Full</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="p-5 text-center text-muted border border-4 border-dark bg-white" style="box-shadow: var(--brutalist-shadow-offset) var(--brutalist-shadow-offset) 0 var(--ui-border);">
+        <i class="fa-solid fa-search-minus fa-3x mb-3 text-secondary"></i>
+        <h5>No Matches Found</h5>
+        <p>No active open treks match your filter criteria. Try adjusting your query parameters.</p>
+    </div>
+{% endif %}
+{% endblock %}

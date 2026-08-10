@@ -1,0 +1,147 @@
+/* ==========================================================================
+   Trek Operations Management System (TOMS) - PAGES & RESPONSIVE STYLESHEET
+   ==========================================================================
+   DEVELOPER REFERENCE:
+   This file controls page-specific layout overrides, print styles, and grouped
+   responsive media queries.
+
+   Where to modify specific pages:
+   - Main Container Layout: Look under SECTION 1 (Layout & Container Overrides)
+   - Landing Page Role Switcher: Look under SECTION 2 (Landing Page Panel Toggles)
+   - Certificate Printing: Look under SECTION 3 (Certificate Print Styling)
+   - Mobile & Media Queries: Look under SECTION 4 (Responsive Rules)
+   ========================================================================== */
+
+/* ==========================================================================
+   1. LAYOUT & CONTAINER OVERRIDES
+   --------------------------------------------------------------------------
+   DEVELOPER NOTE:
+   Controls main content spacing between navbar and footer, and content card
+   container resets. (Moved from inline base.html styles).
+   ========================================================================== */
+.main-container {
+    flex: 1;
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+
+.content-card {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    border-radius: 0 !important;
+}
+
+/* ==========================================================================
+   2. LANDING PAGE ROLE SWITCHER TOGGLES
+   --------------------------------------------------------------------------
+   DEVELOPER NOTE:
+   Pure CSS toggle engine for switching credential cards on index.html landing page.
+   ========================================================================== */
+.creds-panel {
+    display: none;
+}
+
+/* Toggle display selectors based on radio button state */
+#role-admin-toggle:checked ~ .row .admin-creds {
+    display: block;
+}
+#role-staff-toggle:checked ~ .row .staff-creds {
+    display: block;
+}
+#role-trekker-toggle:checked ~ .row .trekker-creds {
+    display: block;
+}
+
+/* Custom shape highlighting when radio is selected */
+#role-admin-toggle:checked ~ .row #label-admin .selector-box {
+    background: var(--ui-border);
+}
+#role-admin-toggle:checked ~ .row #label-admin .selector-box .shape-circle {
+    opacity: 1;
+    width: 14px;
+    height: 14px;
+}
+#role-admin-toggle:checked ~ .row #label-admin .label-text {
+    color: var(--ui-accent);
+}
+
+#role-staff-toggle:checked ~ .row #label-staff .selector-box {
+    background: var(--ui-border);
+}
+#role-staff-toggle:checked ~ .row #label-staff .selector-box .shape-square {
+    opacity: 1;
+    width: 14px;
+    height: 14px;
+}
+#role-staff-toggle:checked ~ .row #label-staff .label-text {
+    color: var(--bauhaus-blue);
+}
+
+#role-trekker-toggle:checked ~ .row #label-trekker .selector-box {
+    background: var(--ui-border);
+}
+#role-trekker-toggle:checked ~ .row #label-trekker .selector-box .shape-triangle {
+    opacity: 1;
+}
+#role-trekker-toggle:checked ~ .row #label-trekker .label-text {
+    color: var(--bauhaus-yellow);
+}
+
+/* ==========================================================================
+   3. CERTIFICATE PRINT STYLING
+   --------------------------------------------------------------------------
+   DEVELOPER NOTE:
+   Applied automatically when user triggers browser print dialog on 
+   templates/user/view_certificate.html. Hides navbar/footer and fills printable area.
+   ========================================================================== */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .certificate-container, .certificate-container * {
+        visibility: visible;
+    }
+    .certificate-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: 6px solid #000000 !important;
+        box-shadow: none !important;
+        padding: 2rem !important;
+        margin: 0 !important;
+    }
+    /* Hide navbar, sidebar, footer, and print button controls */
+    nav, .sidebar, footer, .d-print-none {
+        display: none !important;
+    }
+}
+
+/* ==========================================================================
+   4. RESPONSIVE / MEDIA QUERIES
+   --------------------------------------------------------------------------
+   DEVELOPER NOTE:
+   Mobile layout adjustments and responsive breakpoint rules.
+   Bootstrap grid handles responsive column stacking (col-md-*, col-lg-*).
+   Custom CSS overrides for small screens are grouped here.
+   ========================================================================== */
+@media (max-width: 767.98px) {
+    .brutalist-card {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .metric-num {
+        font-size: 2.2rem;
+    }
+    
+    .bauhaus-container {
+        padding: 15px;
+    }
+
+    .table-responsive {
+        border: var(--brutalist-border-width) solid var(--ui-border);
+    }
+}

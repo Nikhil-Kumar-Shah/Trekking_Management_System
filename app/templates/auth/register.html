@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - REGISTRATION TEMPLATE
+==========================================================================
+DEVELOPER NOTE:
+This template presents the new user / trekker registration form.
+Flask Controller: `auth.register` in app/routes/auth_routes.py
+
+Key Form Sections:
+1. Personal Credentials: Full Name, Email, Phone, Password, and Password Confirmation.
+2. Emergency & Medical Information: Blood group, medical conditions, emergency contact name/phone.
+3. Server Validation: Form errors are returned by WTForms and highlighted using
+   Bootstrap `is-invalid` CSS feedback containers.
+==========================================================================
+-->
+<div class="row mt-4">
+    <div class="col-md-8 mx-auto">
+        <div class="brutalist-card">
+            <div class="brutalist-card__header mb-4">
+                <span class="brutalist-card__alert"><i class="fa-solid fa-user-plus me-2"></i>Trekker Registration</span>
+            </div>
+
+            <form method="POST" action="" novalidate>
+                {{ form.hidden_tag() }}
+
+                <h5 class="text-dark border-bottom border-2 border-dark pb-2 mb-3">
+                    <i class="fa-solid fa-user me-2"></i>Personal Credentials
+                </h5>
+
+                <!-- Full Name Field -->
+                <div class="mb-3">
+                    {{ form.full_name.label(class="form-label font-weight-bold text-uppercase small") }}
+                    {% if form.full_name.errors %}
+                        {{ form.full_name(class="form-control is-invalid", placeholder="Full Name") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.full_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.full_name(class="form-control", placeholder="Full Name") }}
+                    {% endif %}
+                </div>
+
+                <div class="row">
+                    <!-- Email Field -->
+                    <div class="col-md-6 mb-3">
+                        {{ form.email.label(class="form-label font-weight-bold text-uppercase small") }}
+                        {% if form.email.errors %}
+                            {{ form.email(class="form-control is-invalid", placeholder="email@example.com") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.email.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.email(class="form-control", placeholder="email@example.com") }}
+                        {% endif %}
+                    </div>
+
+                    <!-- Phone Field -->
+                    <div class="col-md-6 mb-3">
+                        {{ form.phone.label(class="form-label font-weight-bold text-uppercase small") }}
+                        {% if form.phone.errors %}
+                            {{ form.phone(class="form-control is-invalid", placeholder="Phone Number") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.phone.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.phone(class="form-control", placeholder="Phone Number") }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Password Field -->
+                    <div class="col-md-6 mb-3">
+                        {{ form.password.label(class="form-label font-weight-bold text-uppercase small") }}
+                        {% if form.password.errors %}
+                            {{ form.password(class="form-control is-invalid", placeholder="Password") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.password.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.password(class="form-control", placeholder="Password") }}
+                        {% endif %}
+                    </div>
+
+                    <!-- Confirm Password Field -->
+                    <div class="col-md-6 mb-3">
+                        {{ form.confirm_password.label(class="form-label font-weight-bold text-uppercase small") }}
+                        {% if form.confirm_password.errors %}
+                            {{ form.confirm_password(class="form-control is-invalid", placeholder="Confirm Password") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.confirm_password.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.confirm_password(class="form-control", placeholder="Confirm Password") }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <h5 class="text-dark border-bottom border-2 border-dark pb-2 mb-3 mt-4">
+                    <i class="fa-solid fa-briefcase-medical me-2"></i>Emergency & Medical Info (Optional)
+                </h5>
+
+                <div class="row">
+                    <!-- Blood Group Field -->
+                    <div class="col-md-6 mb-3">
+                        {{ form.blood_group.label(class="form-label font-weight-bold text-uppercase small") }}
+                        {% if form.blood_group.errors %}
+                            {{ form.blood_group(class="form-select is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.blood_group.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.blood_group(class="form-select") }}
+                        {% endif %}
+                    </div>
+
+                    <!-- Medical Conditions Field -->
+                    <div class="col-md-6 mb-3">
+                        {{ form.medical_conditions.label(class="form-label font-weight-bold text-uppercase small") }}
+                        {% if form.medical_conditions.errors %}
+                            {{ form.medical_conditions(class="form-control is-invalid", placeholder="Asthma, Allergies, Heart issues, etc.") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.medical_conditions.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.medical_conditions(class="form-control", placeholder="Asthma, Allergies, Heart issues, etc.", rows=2) }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Emergency Contact Name Field -->
+                    <div class="col-md-6 mb-3">
+                        {{ form.emergency_contact_name.label(class="form-label font-weight-bold text-uppercase small") }}
+                        {% if form.emergency_contact_name.errors %}
+                            {{ form.emergency_contact_name(class="form-control is-invalid", placeholder="Contact Person Name") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.emergency_contact_name.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.emergency_contact_name(class="form-control", placeholder="Contact Person Name") }}
+                        {% endif %}
+                    </div>
+
+                    <!-- Emergency Contact Phone Field -->
+                    <div class="col-md-6 mb-3">
+                        {{ form.emergency_contact_phone.label(class="form-label font-weight-bold text-uppercase small") }}
+                        {% if form.emergency_contact_phone.errors %}
+                            {{ form.emergency_contact_phone(class="form-control is-invalid", placeholder="Contact Phone Number") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.emergency_contact_phone.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.emergency_contact_phone(class="form-control", placeholder="Contact Phone Number") }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Form Submit Action -->
+                <div class="mt-4">
+                    <button type="submit" class="brutalist-btn brutalist-btn-success w-100">
+                        Create Account
+                    </button>
+                </div>
+            </form>
+
+            <div class="text-center mt-4 pt-3 border-top border-2 border-dark">
+                <p class="mb-0">Already have an account? <a href="{{ url_for('auth.login') }}" class="font-weight-bold text-dark">Log In here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

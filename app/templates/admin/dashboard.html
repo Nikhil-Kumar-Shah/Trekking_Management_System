@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - ADMIN DASHBOARD TEMPLATE
+==========================================================================
+DEVELOPER NOTE:
+This is the primary administrative portal dashboard (Flask route: `/admin/dashboard`).
+Controller: `admin.dashboard` in app/routes/admin_routes.py
+
+Data Context Passed from Flask Route:
+- `total_treks`: Total count of created trekking routes.
+- `open_treks`: Count of treks currently accepting bookings.
+- `total_bookings`: Count of active trekker bookings.
+- `total_staff`: Total staff members registered.
+- `total_users`: Total trekker accounts registered.
+- `recent_bookings`: List of most recent booking records for quick audit.
+==========================================================================
+-->
+<div class="mb-4 pb-2 border-bottom">
+    <h3><i class="fa-solid fa-chart-line me-2"></i>Admin Administration Dashboard</h3>
+    <p class="text-muted">Welcome, Admin. Oversee organization statistics, manage treks, staff, and registrations.</p>
+</div>
+
+<!-- Metrics Row -->
+<div class="row mb-5">
+    <!-- Total Treks Metric Card -->
+    <div class="col-md-4 mb-4">
+        <div class="metric-box">
+            <div class="metric-num">{{ total_treks }}</div>
+            <div class="metric-label">Total Treks</div>
+            <div class="mt-3">
+                <a href="{{ url_for('admin.list_treks') }}" class="brutalist-btn brutalist-btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px;">
+                    View Treks <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Open Treks Metric Card -->
+    <div class="col-md-4 mb-4">
+        <div class="metric-box">
+            <div class="metric-num text-success">{{ open_treks }}</div>
+            <div class="metric-label">Open for Bookings</div>
+            <div class="mt-3">
+                <a href="{{ url_for('admin.list_treks') }}" class="brutalist-btn brutalist-btn-success" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px;">
+                    Configure Treks <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Total Bookings Metric Card -->
+    <div class="col-md-4 mb-4">
+        <div class="metric-box">
+            <div class="metric-num text-info">{{ total_bookings }}</div>
+            <div class="metric-label">Active Bookings</div>
+            <div class="mt-3">
+                <a href="{{ url_for('admin.list_bookings') }}" class="brutalist-btn brutalist-btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px; background-color: #ffffff;">
+                    Review Bookings <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Quick Stats Card -->
+    <div class="col-md-6 mb-4">
+        <div class="brutalist-card brutalist-card--beige h-100">
+            <div class="brutalist-card__header border-dark">
+                <span class="brutalist-card__alert"><i class="fa-solid fa-users-gear me-2"></i>System Members</span>
+            </div>
+            <div class="mt-3">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" style="background-color: transparent !important;">
+                        Active Trekking Staff
+                        <span class="badge bg-secondary font-weight-bold" style="font-size: 0.9rem; border-color: var(--ui-border);">{{ total_staff }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center" style="background-color: transparent !important;">
+                        Registered Trekkers (Users)
+                        <span class="badge bg-primary font-weight-bold text-dark" style="font-size: 0.9rem; border-color: var(--ui-border);">{{ total_users }}</span>
+                    </li>
+                </ul>
+                <div class="mt-4 d-flex gap-2">
+                    <a href="{{ url_for('admin.create_staff') }}" class="brutalist-btn brutalist-btn-primary flex-fill" style="padding: 0.5rem; font-size: 0.85rem; text-align: center; margin: 0; box-shadow: 3px 3px 0 var(--ui-border); border-width: 2px; background-color: #ffffff; color: var(--ui-text);">
+                        <i class="fa-solid fa-user-plus me-1"></i>Create Staff
+                    </a>
+                    <a href="{{ url_for('admin.list_users') }}" class="brutalist-btn brutalist-btn-secondary flex-fill" style="padding: 0.5rem; font-size: 0.85rem; text-align: center; margin: 0; box-shadow: 3px 3px 0 var(--ui-border); border-width: 2px; background-color: #ffffff; color: var(--ui-text);">
+                        <i class="fa-solid fa-users me-1"></i>Manage Trekkers
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Bookings Table -->
+    <div class="col-md-6 mb-4">
+        <div class="brutalist-card h-100">
+            <div class="brutalist-card__header border-dark">
+                <span class="brutalist-card__alert"><i class="fa-solid fa-clock me-2"></i>Recent Registration Orders</span>
+            </div>
+            <div class="mt-3">
+                {% if recent_bookings %}
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Trekker</th>
+                                    <th>Trek</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in recent_bookings %}
+                                    <tr>
+                                        <td><strong>{{ booking.trekker.full_name }}</strong></td>
+                                        <td>{{ booking.trek.title }}</td>
+                                        <td>
+                                            {% if booking.booking_status == 'Booked' %}
+                                                <span class="badge bg-success">Confirmed</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Cancelled</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="p-4 text-center text-muted">
+                        No registrations recorded in the system.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

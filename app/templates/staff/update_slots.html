@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Adjust Available Slots - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - STAFF UPDATE SLOTS
+==========================================================================
+DEVELOPER NOTE:
+Allows assigned staff to adjust remaining available slots for dynamic on-field capacity management.
+Flask Controller: `staff.update_slots` in app/routes/staff_routes.py
+==========================================================================
+-->
+<div class="row mb-4 pb-2 border-bottom">
+    <div class="col-12">
+        <h3><i class="fa-solid fa-sliders me-2"></i>Adjust Available Slots</h3>
+        <p class="text-muted">Trek: <strong>{{ trek.title }}</strong></p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Slot parameters -->
+    <div class="col-md-6 mb-4">
+        <div class="brutalist-card brutalist-card--beige h-100">
+            <h5 class="border-bottom border-dark pb-2 mb-3">Trek Capacity Parameters</h5>
+            <p><strong>Maximum Capacity:</strong> {{ trek.max_slots }} slots</p>
+            <p><strong>Current Available Slots:</strong> {{ trek.available_slots }} slots</p>
+            <p class="text-secondary small">Staff can reduce available slots if some spots are reserved offline or adjust parameters dynamically based on logistics.</p>
+        </div>
+    </div>
+    
+    <!-- Slots adjustments form -->
+    <div class="col-md-6 mb-4">
+        <div class="brutalist-card h-100">
+            <h5 class="border-bottom border-dark pb-2 mb-3">Slots Form</h5>
+            <form method="POST" action="" novalidate>
+                {{ form.hidden_tag() }}
+                
+                <div class="mb-3">
+                    {{ form.available_slots.label(class="form-label") }}
+                    {% if form.available_slots.errors %}
+                        {{ form.available_slots(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.available_slots.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.available_slots(class="form-control") }}
+                    {% endif %}
+                </div>
+                
+                <div class="mt-4">
+                    {{ form.submit(class="brutalist-btn brutalist-btn-primary") }}
+                    <a href="{{ url_for('staff.list_treks') }}" class="brutalist-btn brutalist-btn-secondary ms-2">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

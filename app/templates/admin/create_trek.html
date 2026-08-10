@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}Create Trek - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - CREATE TREK TEMPLATE
+==========================================================================
+DEVELOPER NOTE:
+Form template for scheduling a new trekking event.
+Flask Controller: `admin.create_trek` in app/routes/admin_routes.py
+
+Key Form Inputs:
+- Title, Location, Altitude (meters above sea level).
+- Difficulty Level dropdown select, Duration (days), Capacity max slots.
+- Start and End date pickers (`type="date"`).
+- Meeting Point and detailed Description text area.
+==========================================================================
+-->
+<div class="brutalist-card">
+    <div class="brutalist-card__header mb-4">
+        <span class="brutalist-card__alert"><i class="fa-solid fa-mountain-sun me-2"></i>Create New Trek</span>
+    </div>
+
+    <form method="POST" action="" novalidate>
+        {{ form.hidden_tag() }}
+        
+        <!-- Title Field -->
+        <div class="mb-3">
+            {{ form.title.label(class="form-label font-weight-bold text-uppercase small") }}
+            {% if form.title.errors %}
+                {{ form.title(class="form-control is-invalid", placeholder="e.g. Annapurna Base Camp Expedition") }}
+                <div class="invalid-feedback">
+                    {% for error in form.title.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.title(class="form-control", placeholder="e.g. Annapurna Base Camp Expedition") }}
+            {% endif %}
+        </div>
+        
+        <div class="row">
+            <!-- Location Field -->
+            <div class="col-md-6 mb-3">
+                {{ form.location.label(class="form-label font-weight-bold text-uppercase small") }}
+                {% if form.location.errors %}
+                    {{ form.location(class="form-control is-invalid", placeholder="e.g. Pokhara, Nepal") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.location.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.location(class="form-control", placeholder="e.g. Pokhara, Nepal") }}
+                {% endif %}
+            </div>
+            
+            <!-- Altitude Field -->
+            <div class="col-md-6 mb-3">
+                {{ form.altitude.label(class="form-label font-weight-bold text-uppercase small") }}
+                {% if form.altitude.errors %}
+                    {{ form.altitude(class="form-control is-invalid", placeholder="e.g. 4130") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.altitude.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.altitude(class="form-control", placeholder="e.g. 4130") }}
+                {% endif %}
+                <small class="form-text text-muted">Height in meters above sea level.</small>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Difficulty Level Field -->
+            <div class="col-md-4 mb-3">
+                {{ form.difficulty_level.label(class="form-label font-weight-bold text-uppercase small") }}
+                {% if form.difficulty_level.errors %}
+                    {{ form.difficulty_level(class="form-select is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.difficulty_level.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.difficulty_level(class="form-select") }}
+                {% endif %}
+            </div>
+            
+            <!-- Duration Field -->
+            <div class="col-md-4 mb-3">
+                {{ form.duration_days.label(class="form-label font-weight-bold text-uppercase small") }}
+                {% if form.duration_days.errors %}
+                    {{ form.duration_days(class="form-control is-invalid", placeholder="e.g. 10") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.duration_days.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.duration_days(class="form-control", placeholder="e.g. 10") }}
+                {% endif %}
+            </div>
+            
+            <!-- Capacity / Slots Field -->
+            <div class="col-md-4 mb-3">
+                {{ form.max_slots.label(class="form-label font-weight-bold text-uppercase small") }}
+                {% if form.max_slots.errors %}
+                    {{ form.max_slots(class="form-control is-invalid", placeholder="e.g. 20") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.max_slots.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.max_slots(class="form-control", placeholder="e.g. 20") }}
+                {% endif %}
+                <small class="form-text text-muted">Maximum number of trekkers.</small>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Start Date -->
+            <div class="col-md-6 mb-3">
+                {{ form.start_date.label(class="form-label font-weight-bold text-uppercase small") }}
+                {% if form.start_date.errors %}
+                    {{ form.start_date(class="form-control is-invalid", type="date") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.start_date.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.start_date(class="form-control", type="date") }}
+                {% endif %}
+            </div>
+            
+            <!-- End Date -->
+            <div class="col-md-6 mb-3">
+                {{ form.end_date.label(class="form-label font-weight-bold text-uppercase small") }}
+                {% if form.end_date.errors %}
+                    {{ form.end_date(class="form-control is-invalid", type="date") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.end_date.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.end_date(class="form-control", type="date") }}
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Meeting Point Field -->
+        <div class="mb-3">
+            {{ form.meeting_point.label(class="form-label font-weight-bold text-uppercase small") }}
+            {% if form.meeting_point.errors %}
+                {{ form.meeting_point(class="form-control is-invalid", placeholder="e.g. Pokhara Airport Gate No 2") }}
+                <div class="invalid-feedback">
+                    {% for error in form.meeting_point.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.meeting_point(class="form-control", placeholder="e.g. Pokhara Airport Gate No 2") }}
+            {% endif %}
+        </div>
+
+        <!-- Description Field -->
+        <div class="mb-3">
+            {{ form.description.label(class="form-label font-weight-bold text-uppercase small") }}
+            {% if form.description.errors %}
+                {{ form.description(class="form-control is-invalid", placeholder="Enter detailed trek description...", rows=5) }}
+                <div class="invalid-feedback">
+                    {% for error in form.description.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.description(class="form-control", placeholder="Enter detailed trek description...", rows=5) }}
+            {% endif %}
+        </div>
+
+        <!-- Form Submit & Cancel Actions -->
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="brutalist-btn brutalist-btn-primary flex-fill">Create Trek Event</button>
+            <a href="{{ url_for('admin.list_treks') }}" class="brutalist-btn brutalist-btn-secondary flex-fill text-center">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

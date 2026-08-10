@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Mark Attendance - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - MARK ATTENDANCE TEMPLATE
+==========================================================================
+DEVELOPER NOTE:
+Form for marking on-field attendance and logging notes for a trekker.
+Flask Controller: `staff.mark_attendance` in app/routes/staff_routes.py
+
+Key Logic:
+- Participant Details Card: Displays medical conditions, blood group, and emergency contact.
+- Attendance Form: Select status (Present / Absent) and log notes (fitness check, delays, gear check).
+- Setting `checked_in = True` qualifies the trekker for a completion certificate when the trek is marked Completed.
+==========================================================================
+-->
+<div class="row mb-4 pb-2 border-bottom">
+    <div class="col-12">
+        <h3><i class="fa-solid fa-clipboard-user me-2"></i>Mark Attendance</h3>
+        <p class="text-muted">Participant: <strong>{{ booking.trekker.full_name }}</strong> for Trek: <strong>{{ booking.trek.title }}</strong></p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Participant details card -->
+    <div class="col-md-6 mb-4">
+        <div class="brutalist-card brutalist-card--beige h-100">
+            <h5 class="border-bottom border-dark pb-2 mb-3">Trekker Details</h5>
+            <p><strong>Name:</strong> {{ booking.trekker.full_name }}</p>
+            <p><strong>Email:</strong> {{ booking.trekker.email }}</p>
+            <p><strong>Phone:</strong> {{ booking.trekker.phone }}</p>
+            <p><strong>Blood Group:</strong> {{ booking.trekker.blood_group or 'N/A' }}</p>
+            <p><strong>Medical Conditions:</strong> {{ booking.trekker.medical_conditions or 'None' }}</p>
+            <p><strong>Emergency Contact:</strong> {{ booking.trekker.emergency_contact_name or 'N/A' }} ({{ booking.trekker.emergency_contact_phone or 'N/A' }})</p>
+        </div>
+    </div>
+    
+    <!-- Attendance form -->
+    <div class="col-md-6 mb-4">
+        <div class="brutalist-card h-100">
+            <h5 class="border-bottom border-dark pb-2 mb-3">Attendance Form</h5>
+            <form method="POST" action="" novalidate>
+                {{ form.hidden_tag() }}
+                
+                <!-- Status Field -->
+                <div class="mb-3">
+                    {{ form.attendance_status.label(class="form-label") }}
+                    {% if form.attendance_status.errors %}
+                        {{ form.attendance_status(class="form-select is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.attendance_status.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.attendance_status(class="form-select") }}
+                    {% endif %}
+                </div>
+                
+                <!-- Notes Field -->
+                <div class="mb-3">
+                    {{ form.notes.label(class="form-label") }}
+                    {% if form.notes.errors %}
+                        {{ form.notes(class="form-control is-invalid", rows=3, placeholder="Notes about physical fitness, delays, gear check, etc.") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.notes.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.notes(class="form-control", rows=3, placeholder="Notes about physical fitness, delays, gear check, etc.") }}
+                    {% endif %}
+                </div>
+                
+                <div class="mt-4">
+                    {{ form.submit(class="brutalist-btn brutalist-btn-primary") }}
+                    <a href="{{ url_for('staff.list_participants', trek_id=booking.trek_id) }}" class="brutalist-btn brutalist-btn-secondary ms-2">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

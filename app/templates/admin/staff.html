@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Staff - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - ADMIN STAFF MANAGEMENT
+==========================================================================
+DEVELOPER NOTE:
+This template lists all staff members and their active trek assignments.
+Flask Controller: `admin.list_staff` in app/routes/admin_routes.py
+
+Key Operations:
+- Create Staff: Link to `admin.create_staff` form.
+- Active Assignments: Lists treks assigned to each staff guide via `assignments[staff.id]` mapping.
+- Assign Trek Button: Links to `admin.assign_staff` controller.
+- Remove Assignment: POST form to `admin.remove_assignment` route.
+==========================================================================
+-->
+<div class="mb-4 pb-2 border-bottom border-dark d-flex justify-content-between align-items-center">
+    <h3><i class="fa-solid fa-user-shield me-2"></i>Trekking Staff</h3>
+    <a href="{{ url_for('admin.create_staff') }}" class="brutalist-btn brutalist-btn-primary">
+        <i class="fa-solid fa-plus me-1"></i>Create Staff Account
+    </a>
+</div>
+
+{% if staff_members %}
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Active Assignments</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for staff in staff_members %}
+                    <tr>
+                        <td class="font-weight-bold">{{ staff.full_name }}</td>
+                        <td>{{ staff.email }}</td>
+                        <td>{{ staff.phone }}</td>
+                        <td>
+                            {% set staff_assigns = assignments[staff.id] %}
+                            {% if staff_assigns %}
+                                {% for assign in staff_assigns %}
+                                    <div class="mb-1 d-flex align-items-center justify-content-between border-bottom pb-1">
+                                        <small>{{ assign.trek.title }} (<strong>{{ assign.assigned_role }}</strong>)</small>
+                                        <form action="{{ url_for('admin.remove_assignment', assignment_id=assign.id) }}" method="POST">
+                                            <button type="submit" class="btn btn-sm btn-link text-danger p-0 ms-2 text-decoration-none">
+                                                <i class="fa-solid fa-times-circle"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <span class="text-muted small">No active assignments</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin.assign_staff', staff_id=staff.id) }}" class="brutalist-btn brutalist-btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px;">
+                                <i class="fa-solid fa-link"></i> Assign Trek
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="p-5 text-center text-muted border rounded bg-light">
+        <i class="fa-solid fa-users-gear fa-3x mb-3 text-secondary"></i>
+        <h5>No Staff Accounts</h5>
+        <p>Create staff credentials to assign them to coordinate upcoming treks.</p>
+    </div>
+{% endif %}
+{% endblock %}

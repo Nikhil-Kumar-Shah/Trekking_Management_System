@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Treks - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - ADMIN TREK MANAGEMENT
+==========================================================================
+DEVELOPER NOTE:
+This template lists all registered trekking events for administration.
+Flask Controller: `admin.list_treks` in app/routes/admin_routes.py
+
+Key Features:
+- Create Button: Direct link to `admin.create_trek` form.
+- Data Table: Jinja loop iterates over `treks` collection.
+- Actions: Edit trek (`admin.edit_trek`) and Delete trek (`admin.delete_trek` POST form).
+- Status Badges: Displays status (Open, Closed, In Progress, Completed, Cancelled).
+==========================================================================
+-->
+<div class="mb-4 pb-2 border-bottom border-dark d-flex justify-content-between align-items-center">
+    <h3><i class="fa-solid fa-mountain me-2"></i>Trekking Events</h3>
+    <a href="{{ url_for('admin.create_trek') }}" class="brutalist-btn brutalist-btn-primary">
+        <i class="fa-solid fa-plus me-1"></i>Create New Trek
+    </a>
+</div>
+
+{% if treks %}
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Title</th>
+                    <th>Location</th>
+                    <th>Dates</th>
+                    <th>Capacity (Available)</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trek in treks %}
+                    <tr>
+                        <td class="font-weight-bold">{{ trek.title }}</td>
+                        <td>{{ trek.location }} ({{ trek.altitude }}m)</td>
+                        <td>
+                            <small class="d-block text-secondary">Start: {{ trek.start_date.strftime('%Y-%m-%d') }}</small>
+                            <small class="d-block text-secondary">End: {{ trek.end_date.strftime('%Y-%m-%d') }}</small>
+                        </td>
+                        <td>
+                            {{ trek.max_slots - trek.available_slots }} / {{ trek.max_slots }}
+                            <span class="badge bg-light text-dark border ms-1">{{ trek.available_slots }} free</span>
+                        </td>
+                        <td>
+                            {% if trek.trek_status == 'Open' %}
+                                <span class="badge bg-success">Open</span>
+                            {% elif trek.trek_status == 'Closed' %}
+                                <span class="badge bg-secondary">Closed</span>
+                            {% elif trek.trek_status == 'In Progress' %}
+                                <span class="badge bg-info text-dark">In Progress</span>
+                            {% elif trek.trek_status == 'Completed' %}
+                                <span class="badge bg-primary">Completed</span>
+                            {% else %}
+                                <span class="badge bg-danger">Cancelled</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="{{ url_for('admin.edit_trek', trek_id=trek.id) }}" class="brutalist-btn brutalist-btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px; background-color: #ffffff; color: var(--ui-text);">
+                                    <i class="fa-solid fa-edit"></i> Edit
+                                </a>
+                                <form action="{{ url_for('admin.delete_trek', trek_id=trek.id) }}" method="POST" style="display:inline;">
+                                    <button type="submit" class="brutalist-btn brutalist-btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; margin: 0; box-shadow: 2px 2px 0 var(--ui-border); border-width: 2px;">
+                                        <i class="fa-solid fa-trash"></i> Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="p-5 text-center text-muted border rounded bg-light">
+        <i class="fa-solid fa-mountain-range fa-3x mb-3 text-secondary"></i>
+        <h5>No Treks Scheduled</h5>
+        <p>Start by creating the first trek layout event using the button above.</p>
+    </div>
+{% endif %}
+{% endblock %}

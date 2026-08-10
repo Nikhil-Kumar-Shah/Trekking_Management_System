@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}My Certificates - Trekking Management System{% endblock %}
+
+{% block content %}
+<!--
+==========================================================================
+Trekking Operations Management System (TOMS) - CERTIFICATES LIST TEMPLATE
+==========================================================================
+DEVELOPER NOTE:
+Lists all completion certificates issued to the trekker.
+Flask Controller: `user.my_certificates` in app/routes/user_routes.py
+
+Key Operations:
+- Certificate View: Links to `user.view_certificate` route using unique `certificate_number`.
+==========================================================================
+-->
+<div class="mb-4 pb-2 border-bottom">
+    <h3><i class="fa-solid fa-award me-2"></i>My Trek Completion Certificates</h3>
+    <p class="text-muted">Earn completion certificates for successfully attending and finishing scheduled treks.</p>
+</div>
+
+{% if certificates %}
+    <div class="row">
+        {% for cert in certificates %}
+            <div class="col-md-6 mb-4">
+                <div class="brutalist-card h-100 d-flex flex-column justify-content-between">
+                    <div class="text-center p-2">
+                        <i class="fa-solid fa-medal fa-3x text-warning mb-3"></i>
+                        <h4 class="font-weight-bold text-uppercase">{{ cert.booking.trek.title }}</h4>
+                        <h6 class="text-muted font-monospace small mb-3">Certificate No: <code class="text-dark">{{ cert.certificate_number }}</code></h6>
+                        <p class="text-secondary small mt-2">
+                            Issued on: {{ cert.generated_at.strftime('%Y-%m-%d') }}
+                        </p>
+                    </div>
+                    <div class="mt-4">
+                        <a href="{{ url_for('user.view_certificate', certificate_number=cert.certificate_number) }}" class="brutalist-btn brutalist-btn-primary w-100">
+                            <i class="fa-solid fa-eye me-1"></i>View & Print
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="p-5 text-center text-muted border border-4 border-dark bg-white shadow-sm" style="box-shadow: var(--brutalist-shadow-offset) var(--brutalist-shadow-offset) 0 var(--ui-border);">
+        <i class="fa-solid fa-award fa-3x mb-3 text-secondary"></i>
+        <h5>No Certificates Earned Yet</h5>
+        <p>Certificates are automatically generated and issued once a trek you attended is marked Completed by the staff.</p>
+    </div>
+{% endif %}
+{% endblock %}
